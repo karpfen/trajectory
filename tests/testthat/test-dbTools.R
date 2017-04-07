@@ -8,4 +8,5 @@ test_that ("readSQLite", {
                testthat::expect_type (dat, "list")
                dat <- readSQLite (fName, tbl, FALSE)
                testthat::expect_type (dat, "list")
+               testthat::expect_error (readSQLite (fName, "nonexistent", FALSE))
 })

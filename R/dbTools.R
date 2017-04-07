@@ -73,6 +73,13 @@ readSQLite <- function (fName, tblName, sf = TRUE)
     tbls <- RSQLite::dbListTables (conSqlite)
     if (tblName %in% tbls)
         dat <- RSQLite::dbReadTable (conSqlite, tblName)
+    else
+    {
+        tbls <- paste (tbls, collapse = ", ")
+        msg <- paste0 ("Database ", fName, " does not contain table '", tblName,
+                      "'. Available tables are: ", tbls)
+        stop (msg)
+    }
     RSQLite::dbDisconnect (conSqlite)
     if (sf)
     {
