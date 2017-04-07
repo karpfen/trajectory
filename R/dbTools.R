@@ -66,7 +66,7 @@ postgres2sqlite <- function (credentialFile, tblName, outFileName, ask = TRUE)
 #' @export
 readSQLite <- function (fName, tblName)
 {
-    drvSQLite <- DBI::dbDriver ("SQLite")
+    drvSQLite <- RSQLite::dbDriver ("SQLite")
     conSqlite <- RSQLite::dbConnect (drv = drvSQLite, dbname = fName)
     tbls <- RSQLite::dbListTables (conSqlite)
     if (tblName %in% tbls)
