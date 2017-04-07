@@ -4,12 +4,15 @@
 \alias{readSQLite}
 \title{Read SQLite file and return a data.frame}
 \usage{
-readSQLite(fName, tblName)
+readSQLite(fName, tblName, sf = TRUE)
 }
 \arguments{
 \item{fName}{Name of the SQLite file}
 
 \item{tblName}{Name of the table to be fetched}
+
+\item{sf}{if \code{TRUE}, returns a \code{sf} object containing only data
+with valid coordinates in fields lat and lon}
 }
 \value{
 A \code{data.frame} containing the entire table

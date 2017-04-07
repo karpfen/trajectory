@@ -60,11 +60,13 @@ postgres2sqlite <- function (credentialFile, tblName, outFileName, ask = TRUE)
 #'
 #' @param fName Name of the SQLite file
 #' @param tblName Name of the table to be fetched
+#' @param sf if \code{TRUE}, returns a \code{sf} object containing only data
+#' with valid coordinates in fields lat and lon
 #'
 #' @return A \code{data.frame} containing the entire table
 #'
 #' @export
-readSQLite <- function (fName, tblName)
+readSQLite <- function (fName, tblName, sf = TRUE)
 {
     drvSQLite <- RSQLite::dbDriver ("SQLite")
     conSqlite <- RSQLite::dbConnect (drv = drvSQLite, dbname = fName)
@@ -72,5 +74,28 @@ readSQLite <- function (fName, tblName)
     if (tblName %in% tbls)
         dat <- RSQLite::dbReadTable (conSqlite, tblName)
     RSQLite::dbDisconnect (conSqlite)
-    dat
+    if (sf)
+    {
+        if (!all (c ("lat", "lon") %in% names (dat)))
+        {
+            print ("SQLite file does not contain fields lat and long. Returning
+                   regular data.frame.")
+            return (dat)
+        }
+        dat <- dat [!is.na (dat$lat), ]
+        pts <- list ("POINT", dim (dat) [1])
+        for (i in 1:dim (dat) [1])
+        {
+            ln <- dat$lon [i]
+            lt <- dat$lat [i]
+            pts [[i]] <- sf::st_point (c (ln, lt), "XY")
+        }
+        sfc <- sf::st_sfc (pts, crs = 4326)
+        dat$lat <- NULL
+        dat$lon <- NULL
+        pts_out <- sf::st_sf (sfc, dat)
+        pts_out
+    }
+    else
+        dat
 }

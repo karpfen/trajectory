@@ -11,6 +11,7 @@ Imports:
     DBI,
     RPostgreSQL,
     RSQLite,
+    sf,
     utils
 Encoding: UTF-8
 LazyData: true
