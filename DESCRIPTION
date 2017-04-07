@@ -2,8 +2,18 @@ Package: trajectory
 Title: Tools and scripts for trajectory analysis
 Version: 0.0.0.9000
 Authors@R: person("Andreas", "Petutschnig", email = "andreas@petutschnig.de", role = c("aut", "cre"))
-Description: Tools and scripts for trajectory analysis
+Maintainer: Andreas Petutschnig <andreas@petutschnig.de>
+Description: Tools and scripts for managing point data, deriving trajectories
+    and performing trajectory analysis.
 Depends: R (>= 3.3.3)
 License: GPL-3 + file LICENSE
+Imports:
+    DBI,
+    RPostgreSQL,
+    RSQLite,
+    utils
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.0.1
+URL: https://github.com/karpfen/trajectory
+BugReports: https://github.com/karpfen/trajectory

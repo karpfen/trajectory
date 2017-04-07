@@ -1,24 +1,32 @@
-library (RPostgreSQL)
-library (RSQLite)
-source ("utils.R")
+source ("R/utils.R")
 
-# TODO: Bounding Box support
+#' Fetches data from a PostgreSQL table and writes it to a local SQLite file
+#'
+#' @param credentialFile A csv file containing the database credentials
+#' @param tblName Name of the table to be downloaded
+#' @param outFileName Name of the output file
+#' @param ask if \code{TRUE}, ask user for confirmation after showing the table
+#' size
+#'
+#' @export
 postgres2sqlite <- function (credentialFile, tblName, outFileName, ask = TRUE)
 {
     cred <- readCredentials (credentialFile)
-    drv <- dbDriver ("PostgreSQL")
-    con <- dbConnect (drv, user = cred$user, password = cred$password,
-                      host = cred$host, port = cred$port, dbname = cred$dbname)
+    drv <- DBI::dbDriver ("PostgreSQL")
+    con <- RPostgreSQL::dbConnect (drv, user = cred$user,
+                                   password = cred$password, host = cred$host,
+                                   port = cred$port, dbname = cred$dbname)
 
-    if (dbExistsTable (con, tblName))
+    if (RPostgreSQL::dbExistsTable (con, tblName))
     {
         print (paste0 ("Found table ", tblName, " on ", cred$host, "/",
                       cred$dbname, "."))
         sql <- paste ("SELECT count (*) FROM", tblName, ";")
-        size <- dbGetQuery (con, sql)
+        size <- RPostgreSQL::dbGetQuery (con, sql)
         if (ask)
         {
-            txt <- paste0 ("Number of rows: ", size, ". Proceed Downloading? (y) ")
+            txt <- paste0 ("Number of rows: ", size,
+                           ". Proceed Downloading? (y) ")
             res <- readline (txt)
             proceed <- tolower (res) == "y" || res == ""
         } else
@@ -32,28 +40,37 @@ postgres2sqlite <- function (credentialFile, tblName, outFileName, ask = TRUE)
             sql <- paste0 ("SELECT column_name, data_type FROM 
                           information_schema.columns WHERE 
                           table_name = '", tblName, "';")
-            rset <- dbGetQuery (con, sql)
+            rset <- RPostgreSQL::dbGetQuery (con, sql)
             rset <- rset [rset$data_type != "USER-DEFINED", ]
             cols <- paste (rset$column_name, collapse = ",")
             sql <- paste ("SELECT", cols, ", st_y (geom_org) as lat,",
                           "st_x (geom_org) as lon FROM", tblName, ";")
-            rset <- dbGetQuery (con, sql)
-            drvSQLite <- dbDriver ("SQLite")
-            conSqlite <- dbConnect (drv = drvSQLite, dbname = outFileName)
-            dbWriteTable (conSqlite, "tweets", rset)
-            dbDisconnect (conSqlite)
+            rset <- RPostgreSQL::dbGetQuery (con, sql)
+            drvSQLite <- DBI::dbDriver ("SQLite")
+            conSqlite <- RSQLite::dbConnect (drv = drvSQLite,
+                                             dbname = outFileName)
+            RSQLite::dbWriteTable (conSqlite, "tweets", rset)
+            RSQLite::dbDisconnect (conSqlite)
         }
     }
-    dbDisconnect (con)
+    RPostgreSQL::dbDisconnect (con)
 }
 
+#' Read SQLite file and return a data.frame
+#'
+#' @param fName Name of the SQLite file
+#' @param tblName Name of the table to be fetched
+#'
+#' @return A \code{data.frame} containing the entire table
+#'
+#' @export
 readSQLite <- function (fName, tblName)
 {
-    drvSQLite <- dbDriver ("SQLite")
-    conSqlite <- dbConnect (drv = drvSQLite, dbname = fName)
-    tbls <- dbListTables (conSqlite)
+    drvSQLite <- DBI::dbDriver ("SQLite")
+    conSqlite <- RSQLite::dbConnect (drv = drvSQLite, dbname = fName)
+    tbls <- RSQLite::dbListTables (conSqlite)
     if (tblName %in% tbls)
-        dat <- dbReadTable (conSqlite, tblName)
-    dbDisconnect (conSqlite)
+        dat <- RSQLite::dbReadTable (conSqlite, tblName)
+    RSQLite::dbDisconnect (conSqlite)
     dat
 }
