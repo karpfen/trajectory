@@ -1,0 +1,9 @@
+Package: trajectory
+Title: Tools and scripts for trajectory analysis
+Version: 0.0.0.9000
+Authors@R: person("Andreas", "Petutschnig", email = "andreas@petutschnig.de", role = c("aut", "cre"))
+Description: Tools and scripts for trajectory analysis
+Depends: R (>= 3.3.3)
+License: GPL-3 + file LICENSE
+Encoding: UTF-8
+LazyData: true
