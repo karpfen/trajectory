@@ -1,6 +1,6 @@
 #' Creates a set of trajectories from a sfc of points
 #'
-#' @param \code{sf} object containing points
+#' @param pts \code{sf} object containing points
 #' @param foi Feature of interest by which the different trajectories are
 #' differentiated
 #' @param orderBy Field by which points are ordered
