@@ -17,3 +17,10 @@ test_that ("postgres2sqlite", {
                fName <- "test.sqlite"
                testthat::expect_error (postgres2sqlite (cred, tbl, fName))
 })
+
+test_that ("postgres2gpkg", {
+               cred <- "../testCreds.csv"
+               tbl <- "error"
+               fName <- "test.sqlite"
+               testthat::expect_error (postgres2gpkg (cred, tbl, fName))
+})
