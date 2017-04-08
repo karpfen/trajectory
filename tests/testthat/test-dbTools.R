@@ -10,3 +10,10 @@ test_that ("readSQLite", {
                testthat::expect_type (dat, "list")
                testthat::expect_error (readSQLite (fName, "nonexistent", FALSE))
 })
+
+test_that ("postgres2sqlite", {
+               cred <- "../testCreds.csv"
+               tbl <- "error"
+               fName <- "test.sqlite"
+               testthat::expect_error (postgres2sqlite (cred, tbl, fName))
+})
