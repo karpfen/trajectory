@@ -91,8 +91,10 @@ getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, ask=TRUE)
                            rset <- RPostgreSQL::dbGetQuery (con, sql)
                            rset <- rset [rset$data_type != "USER-DEFINED", ]
                            cols <- paste (rset$column_name, collapse = ",")
-                           sql <- paste ("SELECT", cols, ", st_y (geom_org) as lat,",
-                                         "st_x (geom_org) as lon FROM", tblName, ";")
+                           sql <- paste ("SELECT", cols,
+                                         ", st_y (geom_org) as lat,",
+                                         "st_x (geom_org) as lon FROM",
+                                         tblName, ";")
                            rset <- RPostgreSQL::dbGetQuery (con, sql)
         }
     }

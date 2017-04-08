@@ -4,7 +4,7 @@
 \alias{makeTrajectories}
 \title{Creates a set of trajectories from a sfc of points}
 \usage{
-makeTrajectories(pts, foi, orderBy, n)
+makeTrajectories(pts, foi, orderBy, n, join = TRUE)
 }
 \arguments{
 \item{pts}{\code{sf} object containing points}
@@ -15,6 +15,9 @@ differentiated}
 \item{orderBy}{Field by which points are ordered}
 
 \item{n}{minimum number of points per trajectory}
+
+\item{join}{if \code{TRUE}, the resulting \code{sf} object contains both
+trajectories and their related points, if \code{FALSE}, only the trajectories}
 }
 \value{
 A \code{sf} object containing the trajectories

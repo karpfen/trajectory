@@ -5,22 +5,35 @@
 #' differentiated
 #' @param orderBy Field by which points are ordered
 #' @param n minimum number of points per trajectory
+#' @param join if \code{TRUE}, the resulting \code{sf} object contains both
+#' trajectories and their related points, if \code{FALSE}, only the trajectories
 #'
 #' @return A \code{sf} object containing the trajectories
 #'
 #' @export
-makeTrajectories <- function (pts, foi, orderBy, n)
+makeTrajectories <- function (pts, foi, orderBy, n, join=TRUE)
 {
     pts <- pts [pts [[foi]] %in% names (which (table (pts [[foi]]) > n)), ]
     feats <- unique (pts [[foi]])
-    traj <- list ("LINESTRING", length (feats))
-    for (i in 1:length (feats))
+    sfc <- list ("LINESTRING", length (feats))
+    for (i in seq_along (feats))
     {
         feature <- feats [i]
         traj_pts <- pts [pts [[foi]] == feature, ]
         traj_pts <- traj_pts [order (traj_pts [[orderBy]]), ]
         coords <- sf::st_coordinates (traj_pts)
-        traj [[i]] <- sf::st_linestring (coords)
+        sfc [[i]] <- sf::st_linestring (coords)
+    }
+    sfc <- sf::st_sfc (sfc, crs = 4326)
+    feats <- data.frame (feats)
+    names (feats) <- foi
+    traj <- sf::st_sf (sfc, feats)
+    if (join)
+    {
+        missingCols <- names (pts)
+        missingCols <- missingCols [! missingCols %in% names (traj)]
+        invisible (lapply (missingCols, FUN = function (x) traj[[x]] <<- NA))
+        traj <- rbind (pts, traj)
     }
     traj
 }
