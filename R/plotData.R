@@ -12,17 +12,33 @@ plotMap <- function (traj, pts)
     shiny::shinyApp (ui, server)
 }
 
-mapDataPts <- ""
-mapDataTraj <- ""
-
-ui <- shiny::bootstrapPage (
-    shiny::tags$style (type = "text/css", "html, body{width:100%;height:100%}"),
-        leaflet::leafletOutput ("map", width = "100%", height = "100%"),
-        shiny::absolutePanel (top = 10, right = 10,
-        shiny::checkboxInput ("traj", "Show trajectories", TRUE),
-        shiny::checkboxInput ("pts", "Show points", TRUE)
+mapDataPts <- NULL
+mapDataTraj <- NULL
+ui <- NULL
+if (is.null (mapDataPts))
+{
+    ui <- shiny::bootstrapPage (
+        shiny::tags$style (type = "text/css", "html,
+                           body{width:100%;height:100%} .checkbox,
+                           .control-label{color:#FFFFFF}"),
+            leaflet::leafletOutput ("map", width = "100%", height = "100%"),
+            shiny::absolutePanel (top = 10, right = 10,
+            shiny::checkboxInput ("traj", "Show trajectories", TRUE)
+        )
     )
-)
+} else
+{
+    ui <- shiny::bootstrapPage (
+        shiny::tags$style (type = "text/css", "html,
+                           body{width:100%;height:100%} .checkbox,
+                           .control-label{color:#FFFFFF}"),
+            leaflet::leafletOutput ("map", width = "100%", height = "100%"),
+            shiny::absolutePanel (top = 10, right = 10,
+            shiny::checkboxInput ("traj", "Show trajectories", TRUE),
+            shiny::checkboxInput ("pts", "Show points", TRUE)
+        )
+    )
+}
 
 server <- function (input, output, session)
 {
@@ -30,7 +46,7 @@ server <- function (input, output, session)
         dat <- mapDataTraj
         bb <- as.vector (sf::st_bbox (dat))
         leaflet::leaflet (dat) %>%
-        leaflet::addTiles () %>%
+        leaflet::addProviderTiles (leaflet::providers$CartoDB.DarkMatter) %>%
         leaflet::fitBounds (bb [1], bb [2], bb [3], bb [4])
     })
 
@@ -51,16 +67,19 @@ server <- function (input, output, session)
 
     shiny::observe ({
         dat <- mapDataPts
-        proxy <- leaflet::leafletProxy ("map", data=dat)
-        if (input$pts)
+        if (!is.null (dat))
         {
-            proxy %>%
-            leaflet::clearShapes () %>%
-            leaflet::addMarkers ()
-        } else
-        {
-            proxy %>%
-            leaflet::clearShapes ()
+            proxy <- leaflet::leafletProxy ("map", data=dat)
+            if (input$pts)
+            {
+                proxy %>%
+                    leaflet::clearShapes () %>%
+                    leaflet::addMarkers ()
+            } else
+            {
+                proxy %>%
+                    leaflet::clearShapes ()
+            }
         }
     })
 }
