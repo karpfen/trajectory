@@ -3,3 +3,4 @@ makefile$
 \.md$
 \.Rmd$
 \.html$
+^appveyor\.yml$
