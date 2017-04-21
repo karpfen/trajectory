@@ -28,3 +28,15 @@ makeTrajectories <- function (pts, foi, orderBy, n)
     traj <- sf::st_sf (sfc, feats)
     traj
 }
+
+#' Calculates a number of movement indices for each trajectory
+#'
+#' Calculates average distance travelled per point and great circle distance
+#' covered between start and end point for each trajectory
+#'
+#' @param traj \code{sf} object containing the trajectories
+#'
+#' @return A \code{sf} object containing the trajectories with additional fields
+makeMovementIndices <- function (traj)
+{
+}
