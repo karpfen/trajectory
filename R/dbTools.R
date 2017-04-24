@@ -114,6 +114,11 @@ getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, ask=TRUE)
 #' @export
 readSQLite <- function (fName, tblName, sf = TRUE)
 {
+    if (!file.exists (fName))
+    {
+        msg <- paste0 ("Database '", fName, "' not found.")
+        stop (msg)
+    }
     drvSQLite <- RSQLite::dbDriver ("SQLite")
     conSqlite <- RSQLite::dbConnect (drv = drvSQLite, dbname = fName)
     tbls <- RSQLite::dbListTables (conSqlite)
@@ -122,8 +127,8 @@ readSQLite <- function (fName, tblName, sf = TRUE)
     else
     {
         tbls <- paste (tbls, collapse = ", ")
-        msg <- paste0 ("Database ", fName, " does not contain table '", tblName,
-                       "'. Available tables are: ", tbls)
+        msg <- paste0 ("Database '", fName, "' does not contain table '",
+                       tblName, "'. Available tables are: ", tbls)
         stop (msg)
     }
     RSQLite::dbDisconnect (conSqlite)

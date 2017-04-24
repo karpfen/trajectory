@@ -9,6 +9,7 @@ test_that ("readSQLite", {
                dat <- readSQLite (fName, tbl, FALSE)
                testthat::expect_type (dat, "list")
                testthat::expect_error (readSQLite (fName, "nonexistent", FALSE))
+               testthat::expect_error (readSQLite ("nonexistent", "", FALSE))
 })
 
 test_that ("postgres2sqlite", {

@@ -10,7 +10,9 @@ Depends: R (>= 3.3.3)
 License: GPL-3 + file LICENSE
 Imports:
     DBI,
+    geosphere,
     leaflet,
+    magrittr,
     RPostgreSQL,
     RSQLite,
     sf,
