@@ -15,6 +15,7 @@ plotMap <- function (traj, pts)
 mapDataPts <- NULL
 mapDataTraj <- NULL
 ui <- NULL
+cRamp <- subset (RColorBrewer::brewer.pal.info, category == "qual")
 if (is.null (mapDataPts))
 {
     ui <- shiny::bootstrapPage (
@@ -23,7 +24,10 @@ if (is.null (mapDataPts))
                            .control-label{color:#FFFFFF}"),
             leaflet::leafletOutput ("map", width = "100%", height = "100%"),
             shiny::absolutePanel (top = 10, right = 10,
-            shiny::checkboxInput ("traj", "Show trajectories", TRUE)
+            shiny::checkboxInput ("traj", "Show trajectories", TRUE),
+            shiny::selectInput ("colorscheme", "Color Scheme",
+                            selected = rownames (cRamp) [1], rownames (cRamp)),
+            shiny::uiOutput ("colors")
         )
     )
 } else
@@ -35,13 +39,24 @@ if (is.null (mapDataPts))
             leaflet::leafletOutput ("map", width = "100%", height = "100%"),
             shiny::absolutePanel (top = 10, right = 10,
             shiny::checkboxInput ("traj", "Show trajectories", TRUE),
-            shiny::checkboxInput ("pts", "Show points", TRUE)
+            shiny::checkboxInput ("pts", "Show points", TRUE),
+            shiny::selectInput ("colorscheme", "Color Scheme",
+                            selected = rownames (cRamp) [1], rownames (cRamp)),
+            shiny::uiOutput ("colors")
         )
     )
 }
 
 server <- function (input, output, session)
 {
+    cols <- names (mapDataTraj)
+    cols <- cols [cols != "sfc"]
+    output$colors <- shiny::renderUI ({
+        shiny::selectInput ("cols", "Color by:", cols)
+    })
+
+    lnColor <- function (x, colorBy) { leaflet::colorFactor (x, colorBy) } 
+
     output$map <- leaflet::renderLeaflet ({
         dat <- mapDataTraj
         bb <- as.vector (sf::st_bbox (dat))
@@ -53,11 +68,13 @@ server <- function (input, output, session)
     shiny::observe ({
         dat <- mapDataTraj
         proxy <- leaflet::leafletProxy ("map", data=dat)
-        if (input$traj)
+        clrBy <- input$cols
+        if (input$traj & !is.null (clrBy))
         {
+            pal <- lnColor (input$colorscheme, data.frame (dat) [clrBy])
             proxy %>%
             leaflet::clearShapes () %>%
-            leaflet::addPolylines ()
+            leaflet::addPolylines (color = ~pal (dat[clrBy]))
         } else
         {
             proxy %>%
