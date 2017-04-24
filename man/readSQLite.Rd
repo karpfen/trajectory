@@ -4,7 +4,7 @@
 \alias{readSQLite}
 \title{Read SQLite file and return a data.frame}
 \usage{
-readSQLite(fName, tblName, sf = TRUE)
+readSQLite(fName, tblName, sf = TRUE, bbox = NULL)
 }
 \arguments{
 \item{fName}{Name of the SQLite file}
@@ -13,6 +13,9 @@ readSQLite(fName, tblName, sf = TRUE)
 
 \item{sf}{if \code{TRUE}, returns a \code{sf} object containing only data
 with valid coordinates in fields lat and lon}
+
+\item{bbox}{a numeric \code{vector} of length 4 with \code{xmin},
+\code{ymin}, \code{xmax} and \code{ymax}.}
 }
 \value{
 A \code{data.frame} containing the entire table

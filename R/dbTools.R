@@ -108,11 +108,13 @@ getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, ask=TRUE)
 #' @param tblName Name of the table to be fetched
 #' @param sf if \code{TRUE}, returns a \code{sf} object containing only data
 #' with valid coordinates in fields lat and lon
+#' @param bbox a numeric \code{vector} of length 4 with \code{xmin},
+#' \code{ymin}, \code{xmax} and \code{ymax}.
 #'
 #' @return A \code{data.frame} containing the entire table
 #'
 #' @export
-readSQLite <- function (fName, tblName, sf = TRUE)
+readSQLite <- function (fName, tblName, sf = TRUE, bbox = NULL)
 {
     if (!file.exists (fName))
     {
@@ -123,7 +125,27 @@ readSQLite <- function (fName, tblName, sf = TRUE)
     conSqlite <- RSQLite::dbConnect (drv = drvSQLite, dbname = fName)
     tbls <- RSQLite::dbListTables (conSqlite)
     if (tblName %in% tbls)
-        dat <- RSQLite::dbReadTable (conSqlite, tblName)
+    {
+        if (!is.null (bbox) & !is.numeric (bbox) & length (bbox) != 4)
+        {
+            bbox <- NULL
+            msg <- "bbox is not a numeric vector of length 4. Ignoring bbox."
+            print (msg)
+        }
+        if (is.null (bbox))
+            dat <- RSQLite::dbReadTable (conSqlite, tblName)
+        else
+        {
+            sql <- paste0 ("SELECT * from ", tblName, " WHERE ",
+                           "lon > ", bbox [1], " AND ",
+                           "lon < ", bbox [3], " AND ",
+                           "lat > ", bbox [2], " AND ",
+                           "lat < ", bbox [4], ";")
+            dat <- RSQLite::dbGetQuery (conSqlite, sql)
+        }
+        if (dim (dat) [1] == 0)
+            stop ("Query yields no results.")
+    }
     else
     {
         tbls <- paste (tbls, collapse = ", ")
