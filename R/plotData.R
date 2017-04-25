@@ -15,7 +15,7 @@ plotMap <- function (traj, pts)
 mapDataPts <- NULL
 mapDataTraj <- NULL
 ui <- NULL
-cRamp <- subset (RColorBrewer::brewer.pal.info, category == "qual")
+cRamp <- subset (RColorBrewer::brewer.pal.info, category == "seq")
 if (is.null (mapDataPts))
 {
     ui <- shiny::bootstrapPage (
@@ -50,10 +50,11 @@ if (is.null (mapDataPts))
 server <- function (input, output, session)
 {
     cols <- names (mapDataTraj)
-    cols <- cols [cols != "sfc"]
+    cols <- cols [!cols %in% c ("sfc", "user_id")]
     output$colors <- shiny::renderUI ({
         shiny::selectInput ("cols", "Color by:", cols)
     })
+
 
     lnColor <- function (x, colorBy) { leaflet::colorFactor (x, colorBy) } 
 
@@ -69,16 +70,24 @@ server <- function (input, output, session)
         dat <- mapDataTraj
         proxy <- leaflet::leafletProxy ("map", data=dat)
         clrBy <- input$cols
+        clrSch <- input$colorscheme
         if (input$traj & !is.null (clrBy))
         {
-            pal <- lnColor (input$colorscheme, data.frame (dat) [clrBy])
+            nCol <- RColorBrewer::brewer.pal.info [clrSch,]$maxcolors
+            for (i in seq_along (cols))
+                dat [cols [i]]  <- dat [[cols [i]]] %>% cut (nCol)
+            pal <- lnColor (clrSch, dat [[clrBy]])
+            proxy %>% leaflet::clearControls ()
             proxy %>%
             leaflet::clearShapes () %>%
-            leaflet::addPolylines (color = ~pal (dat[clrBy]))
+            leaflet::addPolylines (color = ~pal (dat[[clrBy]])) %>%
+            leaflet::addLegend (position = "bottomright", pal = pal,
+                                values = dat [[clrBy]])
         } else
         {
             proxy %>%
-            leaflet::clearShapes ()
+            leaflet::clearShapes () %>%
+            leaflet::clearControls ()
         }
     })
 
