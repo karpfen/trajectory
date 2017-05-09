@@ -37,7 +37,7 @@ server <- function (input, output, session)
     cols <- names (mapDataTraj)
     cols <- cols [!cols %in% c ("sfc", "user_id")]
     output$colors <- shiny::renderUI ({
-        shiny::selectInput ("cols", "Color by:", cols)
+        shiny::selectInput ("cols", "Attribute of Interest:", cols)
     })
     shiny::observe ({
         cl <- input$cols
@@ -71,11 +71,11 @@ server <- function (input, output, session)
 
     shiny::observe ({
         datTrj <- filtered ()
-        datPts <- mapDataPts
-        if (dim (datTrj) [1] > 0)
+        datPts <- filterPoints (datTrj, mapDataPts, "user_id")
+        if (dim (datTrj) [1] > 1)
         {
             proxy <- leaflet::leafletProxy ("map", data=datTrj) %>%
-                leaflet::clearShapes ()
+                leaflet::clearShapes () %>% leaflet::clearMarkers ()
             clrBy <- input$cols
             if (is.null (clrBy))
                 clrBy <- names (mapDataTraj) [1]
@@ -85,12 +85,17 @@ server <- function (input, output, session)
                 datTrj [cols [i]]  <- datTrj [[cols [i]]] %>% cut (nCol)
             pal <- lnColor (clrSch, datTrj [[clrBy]])
             proxy %>% leaflet::clearControls ()
+            ptCol <- RColorBrewer::brewer.pal (3, clrSch) [1]
             proxy %>%
             leaflet::addPolylines (color = ~pal (datTrj[[clrBy]]),
-                                   group = "Trajectories") %>%
+                                   group = "Trajectories", opacity = 1.0,
+                                   popup = popup ("Trajectory", cols,
+                                                  datTrj [cols])) %>%
             leaflet::addCircleMarkers (stroke = FALSE, group = "Points",
-                                       data = datPts, color = "#0066FF",
-                                       fillOpacity = 0.7, radius = 5) %>%
+                                       data = datPts, color = ptCol,
+                                       fillOpacity = 0.7, radius = 5,
+                                       popup = popup ("Point", names (datPts),
+                                                      datPts)) %>%
             leaflet::addLegend (position = "bottomright", pal = pal,
                                 values = datTrj [[clrBy]], title = clrBy) %>%
             leaflet::addLayersControl (overlayGroups = c ("Trajectories",
@@ -99,4 +104,23 @@ server <- function (input, output, session)
                                        FALSE), position = "bottomright")
         }
     })
+}
+
+#' Generates text for trajectory popup fields on the graph
+#'
+#' @param ptitle The popup title.
+#' @param pnames \code{vector} containing attribute names.
+#' @param pvalues \code{vector} containing attribute values.
+#'
+#' @noRd
+popup <- function (ptitle, pnames, pvalues)
+{
+    txt <- paste0 ("<b>", ptitle, "</b>")
+    for (i in seq_along (pnames))
+    {
+        att <- pnames [i]
+        val <- pvalues [[att]]
+        txt %<>% paste0 ("</br><b>", att, ": </b>", val)
+    }
+    txt
 }

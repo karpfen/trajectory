@@ -8,3 +8,10 @@ test_that ("plotData", {
                testthat::expect_error (plotMap (trj, trj),
                    "pts must contain geometries of type POINT.")
 })
+
+test_that ("popup", {
+               dat <- list ("a")
+               dat ["a"] <- "a"
+               txt <- popup ("a", "a", dat)
+               testthat::expect_is (txt, "character")
+})
