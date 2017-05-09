@@ -27,7 +27,8 @@ ui <- shiny::bootstrapPage (
         shiny::absolutePanel (top = 10, right = 10,
         shiny::selectInput ("colorscheme", "Color Scheme",
                         selected = rownames (cRamp) [1], rownames (cRamp)),
-        shiny::uiOutput ("colors")
+        shiny::uiOutput ("colors"),
+        shiny::uiOutput ("range")
     )
 )
 
@@ -37,6 +38,17 @@ server <- function (input, output, session)
     cols <- cols [!cols %in% c ("sfc", "user_id")]
     output$colors <- shiny::renderUI ({
         shiny::selectInput ("cols", "Color by:", cols)
+    })
+    shiny::observe ({
+        cl <- input$cols
+        if (is.null (cl))
+            cl <- cols [1]
+        rngMin <- min (mapDataTraj [[cl]])
+        rngMax <- max (mapDataTraj [[cl]])
+        output$range <- shiny::renderUI ({
+            shiny::sliderInput ("rng", "Range", rngMin, rngMax,
+                                value = c (rngMin, rngMax))
+        })
     })
 
     lnColor <- function (x, colorBy) { leaflet::colorFactor (x, colorBy) } 
@@ -49,29 +61,42 @@ server <- function (input, output, session)
         leaflet::fitBounds (bb [1], bb [2], bb [3], bb [4])
     })
 
+    filtered <- shiny::reactive ({
+        cl <- input$cols
+        if (is.null (cl))
+            cl <- cols [1]
+        mapDataTraj [mapDataTraj [[cl]] >= input$rng [1] &
+                     mapDataTraj [[cl]] <= input$rng [2], ]
+    })
+
     shiny::observe ({
-        datTrj <- mapDataTraj
+        datTrj <- filtered ()
         datPts <- mapDataPts
-        proxy <- leaflet::leafletProxy ("map", data=datTrj)
-        clrBy <- input$cols
-        if (is.null (clrBy))
-            clrBy <- names (mapDataTraj) [1]
-        clrSch <- input$colorscheme
-        nCol <- RColorBrewer::brewer.pal.info [clrSch,]$maxcolors
-        for (i in seq_along (cols))
-            datTrj [cols [i]]  <- datTrj [[cols [i]]] %>% cut (nCol)
-        pal <- lnColor (clrSch, datTrj [[clrBy]])
-        proxy %>% leaflet::clearControls ()
-        proxy %>%
-        leaflet::addPolylines (color = ~pal (datTrj[[clrBy]]),
-                               group = "Trajectories") %>%
-        leaflet::addCircleMarkers (stroke = FALSE, group = "Points",
-                                   data = datPts, color = "#0066FF",
-                                   fillOpacity = 0.7, radius = 5) %>%
-        leaflet::addLegend (position = "bottomright", pal = pal,
-                            values = datTrj [[clrBy]], title = clrBy) %>%
-        leaflet::addLayersControl (overlayGroups = c ("Trajectories", "Points"),
-                               options = leaflet::layersControlOptions
-                               (collapsed = FALSE), position = "bottomright")
+        if (dim (datTrj) [1] > 0)
+        {
+            proxy <- leaflet::leafletProxy ("map", data=datTrj) %>%
+                leaflet::clearShapes ()
+            clrBy <- input$cols
+            if (is.null (clrBy))
+                clrBy <- names (mapDataTraj) [1]
+            clrSch <- input$colorscheme
+            nCol <- RColorBrewer::brewer.pal.info [clrSch,]$maxcolors
+            for (i in seq_along (cols))
+                datTrj [cols [i]]  <- datTrj [[cols [i]]] %>% cut (nCol)
+            pal <- lnColor (clrSch, datTrj [[clrBy]])
+            proxy %>% leaflet::clearControls ()
+            proxy %>%
+            leaflet::addPolylines (color = ~pal (datTrj[[clrBy]]),
+                                   group = "Trajectories") %>%
+            leaflet::addCircleMarkers (stroke = FALSE, group = "Points",
+                                       data = datPts, color = "#0066FF",
+                                       fillOpacity = 0.7, radius = 5) %>%
+            leaflet::addLegend (position = "bottomright", pal = pal,
+                                values = datTrj [[clrBy]], title = clrBy) %>%
+            leaflet::addLayersControl (overlayGroups = c ("Trajectories",
+                                       "Points"), options =
+                                       leaflet::layersControlOptions (collapsed=
+                                       FALSE), position = "bottomright")
+        }
     })
 }
