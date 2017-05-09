@@ -96,6 +96,10 @@ getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, ask=TRUE)
                                          "st_x (geom_org) as lon FROM",
                                          tblName, ";")
                            rset <- RPostgreSQL::dbGetQuery (con, sql)
+        } else
+        {
+            RPostgreSQL::dbDisconnect (con)
+            stop ("No data have been downloaded.")
         }
     }
     RPostgreSQL::dbDisconnect (con)

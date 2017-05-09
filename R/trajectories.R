@@ -44,7 +44,7 @@ makeMovementIndices <- function (traj)
     trajectory_length <- vector (length = len, mode = "numeric")
     length_start_end <- vector (length = len, mode = "numeric")
     distance_per_point <- vector (length = len, mode = "numeric")
-    for (i in seq_along (traj$sfc))
+    for (i in seq_len (len))
     {
         trj <- traj [i,]
         geom <- sf::st_coordinates (trj)
@@ -61,7 +61,5 @@ makeMovementIndices <- function (traj)
         }
         distance_per_point [i] <- mean (distances)
     }
-    dat <- data.frame (trajectory_length, length_start_end, distance_per_point)
-    traj <- sf::st_bind_cols (traj, dat)
-    traj
+    cbind (traj, trajectory_length, length_start_end, distance_per_point)
 }
