@@ -14,11 +14,11 @@ postgres2sqlite(credentialFile, tblName, outFileName, bbx = NULL,
 
 \item{outFileName}{Name of the output file}
 
+\item{bbx}{Optional bounding box. A numeric \code{vector} of length 4 with
+\code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.}
+
 \item{ask}{if \code{TRUE}, ask user for confirmation after showing the table
 size}
-
-\item{bbox}{Optional bounding box. A numeric \code{vector} of length 4 with
-\code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.}
 }
 \description{
 Fetches data from a PostgreSQL table and writes it to a local SQLite file
