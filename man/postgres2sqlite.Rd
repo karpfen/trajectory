@@ -4,7 +4,8 @@
 \alias{postgres2sqlite}
 \title{Fetches data from a PostgreSQL table and writes it to a local SQLite file}
 \usage{
-postgres2sqlite(credentialFile, tblName, outFileName, ask = TRUE)
+postgres2sqlite(credentialFile, tblName, outFileName, bbx = NULL,
+  ask = TRUE)
 }
 \arguments{
 \item{credentialFile}{A csv file containing the database credentials}
@@ -15,6 +16,9 @@ postgres2sqlite(credentialFile, tblName, outFileName, ask = TRUE)
 
 \item{ask}{if \code{TRUE}, ask user for confirmation after showing the table
 size}
+
+\item{bbox}{Optional bounding box. A numeric \code{vector} of length 4 with
+\code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.}
 }
 \description{
 Fetches data from a PostgreSQL table and writes it to a local SQLite file

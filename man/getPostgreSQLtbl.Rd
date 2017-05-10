@@ -4,7 +4,8 @@
 \alias{getPostgreSQLtbl}
 \title{Fetches data from a PostgreSQL table returns it as a data.frame}
 \usage{
-getPostgreSQLtbl(credentialFile, tblName, outFileName, ask = TRUE)
+getPostgreSQLtbl(credentialFile, tblName, outFileName, bbx = NULL,
+  ask = TRUE)
 }
 \arguments{
 \item{credentialFile}{A csv file containing the database credentials}
@@ -15,6 +16,9 @@ getPostgreSQLtbl(credentialFile, tblName, outFileName, ask = TRUE)
 
 \item{ask}{if \code{TRUE}, ask user for confirmation after showing the table
 size}
+
+\item{bbox}{Optional bounding box. A numeric \code{vector} of length 4 with
+\code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.}
 }
 \description{
 Fetches data from a PostgreSQL table returns it as a data.frame

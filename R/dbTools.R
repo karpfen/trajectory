@@ -5,13 +5,16 @@ source ("R/utils.R")
 #' @param credentialFile A csv file containing the database credentials
 #' @param tblName Name of the table to be downloaded
 #' @param outFileName Name of the output file
+#' @param bbox Optional bounding box. A numeric \code{vector} of length 4 with
+#' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size
 #'
 #' @export
-postgres2sqlite <- function (credentialFile, tblName, outFileName, ask=TRUE)
+postgres2sqlite <- function (credentialFile, tblName, outFileName, bbx = NULL,
+                             ask=TRUE)
 {
-    dat <- getPostgreSQLtbl (credentialFile, tblName, outFileName, ask)
+    dat <- getPostgreSQLtbl (credentialFile, tblName, outFileName, bbx, ask)
     drvSQLite <- DBI::dbDriver ("SQLite")
     conSqlite <- RSQLite::dbConnect (drv = drvSQLite,
                                      dbname = outFileName)
@@ -55,9 +58,12 @@ postgres2gpkg <- function (credentialFile, tblName, outFileName, ask=TRUE)
 #' @param credentialFile A csv file containing the database credentials
 #' @param tblName Name of the table to be downloaded
 #' @param outFileName Name of the output file
+#' @param bbox Optional bounding box. A numeric \code{vector} of length 4 with
+#' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size
-getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, ask=TRUE)
+getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, bbx = NULL,
+                              ask=TRUE)
 {
     cred <- readCredentials (credentialFile)
     drv <- DBI::dbDriver ("PostgreSQL")
@@ -91,11 +97,23 @@ getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, ask=TRUE)
                            rset <- RPostgreSQL::dbGetQuery (con, sql)
                            rset <- rset [rset$data_type != "USER-DEFINED", ]
                            cols <- paste (rset$column_name, collapse = ",")
-                           sql <- paste ("SELECT", cols,
-                                         ", st_y (geom_org) as lat,",
-                                         "st_x (geom_org) as lon FROM",
-                                         tblName, ";")
-                           rset <- RPostgreSQL::dbGetQuery (con, sql)
+                           if (is.null (bbx))
+                           {
+                               sql <- paste ("SELECT", cols,
+                                             ", st_y (geom_org) as lat,",
+                                             "st_x (geom_org) as lon FROM",
+                                             tblName, ";")
+                           } else
+                           {
+                               sql <- paste ("SELECT", cols,
+                                             ", st_y (geom_org) as lat,",
+                                             "st_x (geom_org) as lon FROM",
+                                             tblName, " WHERE geom_org &&",
+                                             "ST_MakeEnvelope (", bbx [1], ",",
+                                             bbx [2], ",", bbx [3], ",",
+                                             bbx [4], ");")
+                           }
+            rset <- RPostgreSQL::dbGetQuery (con, sql)
         } else
         {
             RPostgreSQL::dbDisconnect (con)
