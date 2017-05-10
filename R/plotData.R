@@ -46,7 +46,7 @@ server <- function (input, output, session)
         rngMin <- mapDataTraj [[cl]] %>% min %>% floor 
         rngMax <- mapDataTraj [[cl]] %>% max %>% ceiling 
         output$range <- shiny::renderUI ({
-            shiny::sliderInput ("rng", "Attribute of Interest", rngMin, rngMax,
+            shiny::sliderInput ("rng", "Range", rngMin, rngMax,
                                 value = c (rngMin, rngMax))
         })
     })
