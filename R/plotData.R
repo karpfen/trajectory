@@ -43,10 +43,10 @@ server <- function (input, output, session)
         cl <- input$cols
         if (is.null (cl))
             cl <- cols [1]
-        rngMin <- min (mapDataTraj [[cl]])
-        rngMax <- max (mapDataTraj [[cl]])
+        rngMin <- mapDataTraj [[cl]] %>% min %>% floor 
+        rngMax <- mapDataTraj [[cl]] %>% max %>% ceiling 
         output$range <- shiny::renderUI ({
-            shiny::sliderInput ("rng", "Range", rngMin, rngMax,
+            shiny::sliderInput ("rng", "Attribute of Interest", rngMin, rngMax,
                                 value = c (rngMin, rngMax))
         })
     })
@@ -118,8 +118,8 @@ popup <- function (ptitle, pnames, pvalues)
     txt <- paste0 ("<b>", ptitle, "</b>")
     for (i in seq_along (pnames))
     {
-        att <- pnames [i]
-        val <- pvalues [[att]]
+        att <- format (pnames [i], digits = 3, nsmall = 2)
+        val <- format (pvalues [[att]], digits = 3, nsmall = 2)
         txt %<>% paste0 ("</br><b>", att, ": </b>", val)
     }
     txt

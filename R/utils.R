@@ -33,3 +33,35 @@ filterPoints <- function (traj, pts, joinBy)
         keep [i] <- joinEl [i] %in% traj [[joinBy]]
     pts [keep, ]
 }
+
+#' Filter points based on attribute values in a list
+#'
+#' Returns only the points that are not listed
+#'
+#' @param pts \code{sf} object containing points.
+#' @param excludelist text file containing attribute name and values
+#'
+#' @return A \code{sf} object containing the filtered points.
+excludePoints <- function (pts, excludelist)
+{
+    rmv <- vector (length = dim (pts) [1], mode = "logical")
+    excludedat <- utils::read.table (excludelist, header = TRUE)
+    excludeBy <- names (excludedat)
+    for (exBy in excludeBy)
+    {
+        dat <- pts [[exBy]]
+        if (!is.null (dat))
+        {
+            for (i in seq_along (dat))
+            {
+                exVec <- as.vector (excludedat [[exBy]])
+                for (ex in seq_along (exVec))
+                {
+                    if (!rmv [i])
+                        rmv [i] <- dat [i] == exVec [ex]
+                }
+            }
+        }
+    }
+    pts [!rmv, ]
+}

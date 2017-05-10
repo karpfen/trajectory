@@ -27,7 +27,7 @@ makeTrajectories <- function (pts, foi, orderBy, n)
     names (feats) <- foi
     traj <- sf::st_sf (sfc, feats)
     traj <- makeMovementIndices (traj)
-    traj
+    traj [traj$trajectory_length > 0,]
 }
 
 #' Calculates a number of movement indices for each trajectory
@@ -44,6 +44,7 @@ makeMovementIndices <- function (traj)
     trajectory_length <- vector (length = len, mode = "numeric")
     length_start_end <- vector (length = len, mode = "numeric")
     distance_per_point <- vector (length = len, mode = "numeric")
+    number_of_points <- vector (length = len, mode = "numeric")
     for (i in seq_len (len))
     {
         trj <- traj [i,]
@@ -52,7 +53,9 @@ makeMovementIndices <- function (traj)
         en <- geom %>% tail (1) %>% magrittr::extract (c (2, 1))
         length_start_end [i] <- geosphere::distVincentyEllipsoid (st, en)
         trajectory_length [i] <- sf::st_length (trj)
-        distances <- vector (length = dim (geom) [1] - 1, mode = "numeric")
+        numPts <- dim (geom) [1]
+        number_of_points [i] <- numPts
+        distances <- vector (length = numPts - 1, mode = "numeric")
         for (j in seq_along (geom [-1,1]))
         {
             st <- geom [j,] %>% magrittr::extract (c (2, 1))
@@ -61,5 +64,6 @@ makeMovementIndices <- function (traj)
         }
         distance_per_point [i] <- mean (distances)
     }
-    cbind (traj, trajectory_length, length_start_end, distance_per_point)
+    cbind (traj, trajectory_length, length_start_end, distance_per_point,
+           number_of_points)
 }
