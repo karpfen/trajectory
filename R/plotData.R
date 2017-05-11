@@ -21,14 +21,20 @@ ui <- NULL
 cRamp <- subset (RColorBrewer::brewer.pal.info, category == "seq")
 ui <- shiny::bootstrapPage (
     shiny::tags$style (type = "text/css", "html,
-                       body{width:100%;height:100%} .checkbox,
-                       .control-label{color:#FFFFFF}"),
+                       body{width:100%;height:100%;} .checkbox,
+                       h4, .control-label, #numPoints, #numTrajectories
+                       {color:#FFFFFF;}"),
         leaflet::leafletOutput ("map", width = "100%", height = "100%"),
         shiny::absolutePanel (top = 10, right = 10,
         shiny::selectInput ("colorscheme", "Color Scheme",
                         selected = rownames (cRamp) [1], rownames (cRamp)),
         shiny::uiOutput ("colors"),
-        shiny::uiOutput ("range")
+        shiny::uiOutput ("range"),
+        shiny::h4 ("Currently Selected:"),
+        shiny::textOutput ("numPoints"),
+        shiny::textOutput ("numTrajectories"),
+        shiny::br (),
+        shiny::plotOutput ("frequency")
     )
 )
 
@@ -61,7 +67,7 @@ server <- function (input, output, session)
         leaflet::fitBounds (bb [1], bb [2], bb [3], bb [4])
     })
 
-    filtered <- shiny::reactive ({
+    filteredData <- shiny::reactive ({
         cl <- input$cols
         if (is.null (cl))
             cl <- cols [1]
@@ -70,8 +76,12 @@ server <- function (input, output, session)
     })
 
     shiny::observe ({
-        datTrj <- filtered ()
+        datTrj <- filteredData ()
         datPts <- filterPoints (datTrj, mapDataPts, "user_id")
+        output$numPoints <- shiny::renderText (paste ("Points:",
+                                                      dim (datPts) [1]))
+        output$numTrajectories <- shiny::renderText (paste ("Trajectories:",
+                                                            dim (datTrj) [1]))
         if (dim (datTrj) [1] > 1)
         {
             proxy <- leaflet::leafletProxy ("map", data=datTrj) %>%
@@ -104,6 +114,26 @@ server <- function (input, output, session)
                                        FALSE), position = "bottomright")
         }
     })
+
+    shiny::observe ({
+        output$frequency <- shiny::renderPlot (freqPlot ())
+    })
+
+    
+    freqPlot <- shiny::reactive ({
+        dat <- filteredData ()
+        if (dim (dat) [1] == 0)
+            return (NULL)
+        dat <- dat [[input$cols]]
+        bns <- min (length (dat), 7)
+        if (bns == 0)
+            return (NULL)
+        dat <- as.data.frame (dat)
+        plt <- ggplot2::ggplot (data = dat, ggplot2::aes (dat)) +
+            ggplot2::geom_histogram (bins = bns, col = "black",
+                                     ggplot2::aes (fill = ..count..))
+        plt
+    })
 }
 
 #' Generates text for trajectory popup fields on the graph
@@ -118,7 +148,7 @@ popup <- function (ptitle, pnames, pvalues)
     txt <- paste0 ("<b>", ptitle, "</b>")
     for (i in seq_along (pnames))
     {
-        att <- format (pnames [i], digits = 3, nsmall = 2)
+        att <- pnames [i]
         val <- format (pvalues [[att]], digits = 3, nsmall = 2)
         txt %<>% paste0 ("</br><b>", att, ": </b>", val)
     }
