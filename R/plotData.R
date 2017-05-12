@@ -23,7 +23,7 @@ ui <- shiny::bootstrapPage (
     shiny::tags$style (type = "text/css", "html,
                        body{width:100%;height:100%;} .checkbox,
                        h4, .control-label, #numPoints, #numTrajectories
-                       {color:#FFFFFF;}"),
+                       {color:#FFFFFF;} img{border-radius: 5px;}"),
         leaflet::leafletOutput ("map", width = "100%", height = "100%"),
         shiny::absolutePanel (top = 10, right = 10,
         shiny::selectInput ("colorscheme", "Color Scheme",
@@ -116,11 +116,6 @@ server <- function (input, output, session)
     })
 
     shiny::observe ({
-        output$frequency <- shiny::renderPlot (freqPlot ())
-    })
-
-    
-    freqPlot <- shiny::reactive ({
         dat <- filteredData ()
         if (dim (dat) [1] == 0)
             return (NULL)
@@ -131,8 +126,10 @@ server <- function (input, output, session)
         dat <- as.data.frame (dat)
         plt <- ggplot2::ggplot (data = dat, ggplot2::aes (dat)) +
             ggplot2::geom_histogram (bins = bns, col = "black",
-                                     ggplot2::aes (fill = ..count..))
-        plt
+                                     ggplot2::aes (fill = ..count..)) +
+            ggplot2::xlab (input$cols) +
+            ggplot2::ylab ("Count")
+        output$frequency <- shiny::renderPlot (plt)
     })
 }
 
