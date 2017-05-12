@@ -106,12 +106,12 @@ server <- function (input, output, session)
                                        fillOpacity = 0.7, radius = 5,
                                        popup = popup ("Point", names (datPts),
                                                       datPts)) %>%
-            leaflet::addLegend (position = "bottomright", pal = pal,
+            leaflet::addLegend (position = "bottomleft", pal = pal,
                                 values = datTrj [[clrBy]], title = clrBy) %>%
             leaflet::addLayersControl (overlayGroups = c ("Trajectories",
                                        "Points"), options =
                                        leaflet::layersControlOptions (collapsed=
-                                       FALSE), position = "bottomright")
+                                       FALSE), position = "bottomleft")
         }
     })
 
