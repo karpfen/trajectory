@@ -35,4 +35,7 @@ vignettes/*.pdf
 dbConfig.csv
 *.html
 
+# locally saved data
 excludelist.csv
+*.gpkg
+*.sqlite
