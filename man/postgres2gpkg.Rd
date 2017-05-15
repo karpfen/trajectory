@@ -4,7 +4,7 @@
 \alias{postgres2gpkg}
 \title{Fetches data from a PostGIS table and writes it to a local Geopackage file}
 \usage{
-postgres2gpkg(credentialFile, tblName, outFileName, ask = TRUE)
+postgres2gpkg(credentialFile, tblName, outFileName, bbx = NULL, ask = TRUE)
 }
 \arguments{
 \item{credentialFile}{A csv file containing the database credentials}
@@ -12,6 +12,9 @@ postgres2gpkg(credentialFile, tblName, outFileName, ask = TRUE)
 \item{tblName}{Name of the table to be downloaded}
 
 \item{outFileName}{Name of the output file}
+
+\item{bbx}{Optional bounding box. A numeric \code{vector} of length 4 with
+\code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.}
 
 \item{ask}{if \code{TRUE}, ask user for confirmation after showing the table
 size}

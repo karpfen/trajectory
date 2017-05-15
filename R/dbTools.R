@@ -29,15 +29,18 @@ postgres2sqlite <- function (credentialFile, tblName, outFileName, bbx = NULL,
 #' @param credentialFile A csv file containing the database credentials
 #' @param tblName Name of the table to be downloaded
 #' @param outFileName Name of the output file
+#' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
+#' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size
 #'
 #' @export
-postgres2gpkg <- function (credentialFile, tblName, outFileName, ask=TRUE)
+postgres2gpkg <- function (credentialFile, tblName, outFileName, bbx = NULL,
+                           ask = TRUE)
 {
     if (!endsWith (tolower (outFileName), ".gpkg"))
         outFileName <- paste0 (outFileName, ".gpkg")
-    dat <- getPostgreSQLtbl (credentialFile, tblName, outFileName, ask)
+    dat <- getPostgreSQLtbl (credentialFile, tblName, outFileName, bbx, ask)
     dat <- dat [!is.na (dat$lat), ]
     pts <- list ("POINT", dim (dat) [1])
     for (i in 1:dim (dat) [1])
