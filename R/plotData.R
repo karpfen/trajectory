@@ -4,7 +4,7 @@
 #' @param pts \code{sf} object containing point data to display
 #'
 #' @export
-plotMap <- function (traj, pts)
+plotLeaflet <- function (traj, pts)
 {
     if (!any (sf::st_geometry_type (traj) == "LINESTRING"))
         stop ("traj must contain geometries of type LINESTRING.")
@@ -97,7 +97,7 @@ server <- function (input, output, session)
             proxy %>% leaflet::clearControls ()
             ptCol <- RColorBrewer::brewer.pal (3, clrSch) [1]
             proxy %>%
-            leaflet::addPolylines (color = ~pal (datTrj[[clrBy]]),
+            leaflet::addPolylines (color = ~pal (datTrj[[clrBy]]), weight = 3,
                                    group = "Trajectories", opacity = 1.0,
                                    popup = popup ("Trajectory", cols,
                                                   datTrj [cols])) %>%
@@ -129,7 +129,7 @@ server <- function (input, output, session)
                                      ggplot2::aes (fill = ..count..)) +
             ggplot2::xlab (input$cols) +
             ggplot2::ylab ("Count")
-        output$frequency <- shiny::renderPlot (plt)
+        # output$frequency <- shiny::renderPlot (plt)
     })
 }
 
@@ -150,4 +150,48 @@ popup <- function (ptitle, pnames, pvalues)
         txt %<>% paste0 ("</br><b>", att, ": </b>", val)
     }
     txt
+}
+
+#' Plots trajectory and point data as a static osmplotr map
+#'
+#' @param traj \code{sf} object containing trajectory data to display
+#' @param pts \code{sf} object containing point data to display
+#' @param reuseMap If \code{TRUE}, will try to reuse a background map stored in
+#' \code{.tmp.map.png} from earlier function calls.
+#'
+#' @export
+plotStatic <- function (traj, pts, reuseMap=TRUE)
+{
+    tmpMapFile <- ".tmp.map.png"
+    if (reuseMap)
+        reuseMap <- tmpMapFile %in% dir (all.files = TRUE)
+    bbx <- sf::st_bbox (pts) %>% osmplotr::get_bbox ()
+    if (!reuseMap)
+    {
+        bgMap <- extract_osm_objects (key = 'boundary',
+                                      value = 'administrative', bbox = bbx) 
+        map <- osm_basemap (bbox=bbx, bg='gray20')
+        map <- add_osm_objects (map, bgMap, col='gray40')
+        print_osm_map (map, filename = tmpMapFile)
+    }
+
+    ptCoords <- sf::st_coordinates (pts)
+    pts$lon <- ptCoords [,1]
+    pts$lat <- ptCoords [,2]
+    bgMap <- png::readPNG (tmpMapFile)
+    bgRaster <- grid::rasterGrob (bgMap)
+
+    ggmBbx <- ggmap::make_bbox (bbx ["x",], bbx ["y",])
+    #ggmap::ggmap ()
+
+
+    p <- ggplot2::ggplot () +
+        ggplot2::annotation_custom (bgRaster, xmin = bbx [1, 1],
+                                    xmax = bbx [1, 2], ymin = bbx [2, 1], ymax = bbx [2, 2]) +
+                       ggplot2::annotation_map (bgRaster) +
+                       ggplot2::geom_point (data = pts, ggplot2::aes (lon, lat))
+                   p
+                   # ggplot2::annotation_custom (bgRaster, width = ggplot2::unit (1, "npc"),
+                   #                             height = ggplot2::unit (1, "npc"), -Inf,
+                   #                             Inf, -Inf, Inf) +
 }

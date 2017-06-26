@@ -3,9 +3,9 @@ test_that ("plotData", {
                tbl <- "sampletable"
                pts <- readSQLite (fName, tbl)
                trj <- makeTrajectories (pts, "speed", "dist", 1)
-               testthat::expect_error (plotMap (pts, pts),
+               testthat::expect_error (plotLeaflet (pts, pts),
                    "traj must contain geometries of type LINESTRING.")
-               testthat::expect_error (plotMap (trj, trj),
+               testthat::expect_error (plotLeaflet (trj, trj),
                    "pts must contain geometries of type POINT.")
 })
 

@@ -53,7 +53,7 @@ postgres2gpkg <- function (credentialFile, tblName, outFileName, bbx = NULL,
     dat$lat <- NULL
     dat$lon <- NULL
     pts_out <- sf::st_sf (sfc, dat)
-    sf::st_write (pts_out, outFileName) 
+    sf::st_write (pts_out, outFileName)
 }
 
 #' Fetches data from a PostgreSQL table returns it as a data.frame
