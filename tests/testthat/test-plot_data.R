@@ -1,11 +1,11 @@
-test_that ("plotData", {
-               fName <- "../sampleDBspatial.sqlite"
+test_that ("plot_data", {
+               fName <- "../sample_db_spatial.sqlite"
                tbl <- "sampletable"
-               pts <- readSQLite (fName, tbl)
-               trj <- makeTrajectories (pts, "speed", "dist", 1)
-               testthat::expect_error (plotMap (pts, pts),
+               pts <- read_sqlite (fName, tbl)
+               trj <- make_trajectories (pts, "speed", "dist", 1)
+               testthat::expect_error (plot_map (pts, pts),
                    "traj must contain geometries of type LINESTRING.")
-               testthat::expect_error (plotMap (trj, trj),
+               testthat::expect_error (plot_map (trj, trj),
                    "pts must contain geometries of type POINT.")
 })
 

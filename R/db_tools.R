@@ -2,45 +2,47 @@ source ("R/utils.R")
 
 #' Fetches data from a PostgreSQL table and writes it to a local SQLite file
 #'
-#' @param credentialFile A csv file containing the database credentials
-#' @param tblName Name of the table to be downloaded
-#' @param outFileName Name of the output file
+#' @param credential_file A csv file containing the database credentials
+#' @param tbl_name Name of the table to be downloaded
+#' @param out_file_name Name of the output file
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size
 #'
 #' @export
-postgres2sqlite <- function (credentialFile, tblName, outFileName, bbx = NULL,
-                             ask=TRUE)
+postgres2sqlite <- function (credential_file, tbl_name, out_file_name,
+                             bbx = NULL, ask=TRUE)
 {
-    dat <- getPostgreSQLtbl (credentialFile, tblName, outFileName, bbx, ask)
-    drvSQLite <- DBI::dbDriver ("SQLite")
-    conSqlite <- RSQLite::dbConnect (drv = drvSQLite,
-                                     dbname = outFileName)
-    RSQLite::dbWriteTable (conSqlite, tblName, dat)
-    RSQLite::dbDisconnect (conSqlite)
+    dat <- get_postgresql_tbl (credential_file, tbl_name, out_file_name, bbx,
+                               ask)
+    drv_sqlite <- DBI::dbDriver ("SQLite")
+    conn_sqlite <- RSQLite::dbConnect (drv = drv_sqlite,
+                                     dbname = out_file_name)
+    RSQLite::dbWriteTable (conn_sqlite, tbl_name, dat)
+    RSQLite::dbDisconnect (conn_sqlite)
 }
 
 #' Fetches data from a PostGIS table and writes it to a local Geopackage file
 #'
 #' Rows without geometries will be omitted.
 #'
-#' @param credentialFile A csv file containing the database credentials
-#' @param tblName Name of the table to be downloaded
-#' @param outFileName Name of the output file
+#' @param credential_file A csv file containing the database credentials
+#' @param tbl_name Name of the table to be downloaded
+#' @param out_file_name Name of the output file
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size
 #'
 #' @export
-postgres2gpkg <- function (credentialFile, tblName, outFileName, bbx = NULL,
+postgres2gpkg <- function (credential_file, tbl_name, out_file_name, bbx = NULL,
                            ask = TRUE)
 {
-    if (!endsWith (tolower (outFileName), ".gpkg"))
-        outFileName <- paste0 (outFileName, ".gpkg")
-    dat <- getPostgreSQLtbl (credentialFile, tblName, outFileName, bbx, ask)
+    if (!endsWith (tolower (out_file_name), ".gpkg"))
+        out_file_name <- paste0 (out_file_name, ".gpkg")
+    dat <- get_postgresql_tbl (credential_file, tbl_name, out_file_name, bbx,
+                               ask)
     dat <- dat [!is.na (dat$lat), ]
     pts <- list ("POINT", dim (dat) [1])
     for (i in 1:dim (dat) [1])
@@ -53,32 +55,32 @@ postgres2gpkg <- function (credentialFile, tblName, outFileName, bbx = NULL,
     dat$lat <- NULL
     dat$lon <- NULL
     pts_out <- sf::st_sf (sfc, dat)
-    sf::st_write (pts_out, outFileName) 
+    sf::st_write (pts_out, out_file_name)
 }
 
 #' Fetches data from a PostgreSQL table returns it as a data.frame
 #'
-#' @param credentialFile A csv file containing the database credentials
-#' @param tblName Name of the table to be downloaded
-#' @param outFileName Name of the output file
+#' @param credential_file A csv file containing the database credentials
+#' @param tbl_name Name of the table to be downloaded
+#' @param out_file_name Name of the output file
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size
-getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, bbx = NULL,
-                              ask=TRUE)
+get_postgresql_tbl <- function (credential_file, tbl_name, out_file_name,
+                                bbx = NULL, ask=TRUE)
 {
-    cred <- readCredentials (credentialFile)
+    cred <- read_credentials (credential_file)
     drv <- DBI::dbDriver ("PostgreSQL")
     con <- RPostgreSQL::dbConnect (drv, user = cred$user,
                                    password = cred$password, host = cred$host,
                                    port = cred$port, dbname = cred$dbname)
 
-    if (RPostgreSQL::dbExistsTable (con, tblName))
+    if (RPostgreSQL::dbExistsTable (con, tbl_name))
     {
-        print (paste0 ("Found table ", tblName, " on ", cred$host, "/",
+        print (paste0 ("Found table ", tbl_name, " on ", cred$host, "/",
                        cred$dbname, "."))
-        sql <- paste ("SELECT count (*) FROM", tblName, ";")
+        sql <- paste ("SELECT count (*) FROM", tbl_name, ";")
         size <- RPostgreSQL::dbGetQuery (con, sql)
         if (ask)
         {
@@ -94,9 +96,9 @@ getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, bbx = NULL,
         if (proceed)
         {
             print ("Downloading data...")
-            sql <- paste0 ("SELECT column_name, data_type FROM 
-                           information_schema.columns WHERE 
-                           table_name = '", tblName, "';")
+            sql <- paste0 ("SELECT column_name, data_type FROM ",
+                           "information_schema.columns WHERE ",
+                           "table_name = '", tbl_name, "';")
                            rset <- RPostgreSQL::dbGetQuery (con, sql)
                            rset <- rset [rset$data_type != "USER-DEFINED", ]
                            cols <- paste (rset$column_name, collapse = ",")
@@ -105,13 +107,13 @@ getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, bbx = NULL,
                                sql <- paste ("SELECT", cols,
                                              ", st_y (geom_org) as lat,",
                                              "st_x (geom_org) as lon FROM",
-                                             tblName, ";")
+                                             tbl_name, ";")
                            } else
                            {
                                sql <- paste ("SELECT", cols,
                                              ", st_y (geom_org) as lat,",
                                              "st_x (geom_org) as lon FROM",
-                                             tblName, " WHERE geom_org &&",
+                                             tbl_name, " WHERE geom_org &&",
                                              "ST_MakeEnvelope (", bbx [1], ",",
                                              bbx [2], ",", bbx [3], ",",
                                              bbx [4], ");")
@@ -129,8 +131,8 @@ getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, bbx = NULL,
 
 #' Read SQLite file and return a data.frame
 #'
-#' @param fName Name of the SQLite file
-#' @param tblName Name of the table to be fetched
+#' @param f_name Name of the SQLite file
+#' @param tbl_name Name of the table to be fetched
 #' @param sf if \code{TRUE}, returns a \code{sf} object containing only data
 #' with valid coordinates in fields lat and lon
 #' @param bbox a numeric \code{vector} of length 4 with \code{xmin},
@@ -139,17 +141,17 @@ getPostgreSQLtbl <- function (credentialFile, tblName, outFileName, bbx = NULL,
 #' @return A \code{data.frame} containing the entire table
 #'
 #' @export
-readSQLite <- function (fName, tblName, sf = TRUE, bbox = NULL)
+read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
 {
-    if (!file.exists (fName))
+    if (!file.exists (f_name))
     {
-        msg <- paste0 ("Database '", fName, "' not found.")
+        msg <- paste0 ("Database '", f_name, "' not found.")
         stop (msg)
     }
-    drvSQLite <- RSQLite::dbDriver ("SQLite")
-    conSqlite <- RSQLite::dbConnect (drv = drvSQLite, dbname = fName)
-    tbls <- RSQLite::dbListTables (conSqlite)
-    if (tblName %in% tbls)
+    drv_sqlite <- RSQLite::dbDriver ("SQLite")
+    conn_sqlite <- RSQLite::dbConnect (drv = drv_sqlite, dbname = f_name)
+    tbls <- RSQLite::dbListTables (conn_sqlite)
+    if (tbl_name %in% tbls)
     {
         if (!is.null (bbox) & !is.numeric (bbox) & length (bbox) != 4)
         {
@@ -158,15 +160,15 @@ readSQLite <- function (fName, tblName, sf = TRUE, bbox = NULL)
             print (msg)
         }
         if (is.null (bbox))
-            dat <- RSQLite::dbReadTable (conSqlite, tblName)
+            dat <- RSQLite::dbReadTable (conn_sqlite, tbl_name)
         else
         {
-            sql <- paste0 ("SELECT * from ", tblName, " WHERE ",
+            sql <- paste0 ("SELECT * from ", tbl_name, " WHERE ",
                            "lon > ", bbox [1], " AND ",
                            "lon < ", bbox [3], " AND ",
                            "lat > ", bbox [2], " AND ",
                            "lat < ", bbox [4], ";")
-            dat <- RSQLite::dbGetQuery (conSqlite, sql)
+            dat <- RSQLite::dbGetQuery (conn_sqlite, sql)
         }
         if (dim (dat) [1] == 0)
             stop ("Query yields no results.")
@@ -174,11 +176,11 @@ readSQLite <- function (fName, tblName, sf = TRUE, bbox = NULL)
     else
     {
         tbls <- paste (tbls, collapse = ", ")
-        msg <- paste0 ("Database '", fName, "' does not contain table '",
-                       tblName, "'. Available tables are: ", tbls)
+        msg <- paste0 ("Database '", f_name, "' does not contain table '",
+                       tbl_name, "'. Available tables are: ", tbls)
         stop (msg)
     }
-    RSQLite::dbDisconnect (conSqlite)
+    RSQLite::dbDisconnect (conn_sqlite)
     if (sf)
     {
         if (!all (c ("lat", "lon") %in% names (dat)))

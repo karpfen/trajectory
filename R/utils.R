@@ -2,16 +2,16 @@
 #'
 #' Reads a csv containing database information and returns them as a data.frame.
 #'
-#' @param fName Filename of the csv file containing the credentials
+#' @param f_name Filename of the csv file containing the credentials
 #'
 #' @return A \code{data.frame} containing the credentials
-readCredentials <- function (fName)
+read_credentials <- function (f_name)
 {
-    dat <- utils::read.csv2 (fName, header=FALSE)
+    dat <- utils::read.csv2 (f_name, header = FALSE)
     dat <- as.data.frame (t (dat))
     names (dat) <- as.matrix (utils::head (dat, 1))
     dat <- dat [-1, ]
-    dat <- data.frame (lapply (dat, as.character), stringsAsFactors=FALSE)
+    dat <- data.frame (lapply (dat, as.character), stringsAsFactors = FALSE)
     dat$port <- as.integer (dat$port)
     dat
 }
@@ -22,15 +22,15 @@ readCredentials <- function (fName)
 #'
 #' @param traj \code{sf} object containing the trajectories.
 #' @param pts \code{sf} object containing points.
-#' @param joinBy shared attribute by which to filter.
+#' @param join_by shared attribute by which to filter.
 #'
 #' @return A \code{sf} object containing the filtered points.
-filterPoints <- function (traj, pts, joinBy)
+filter_points <- function (traj, pts, join_by)
 {
-    joinEl <- pts [[joinBy]]
-    keep <- vector (length = length (joinEl), mode = "logical")
-    for (i in seq_along (joinEl))
-        keep [i] <- joinEl [i] %in% traj [[joinBy]]
+    join_el <- pts [[join_by]]
+    keep <- vector (length = length (join_el), mode = "logical")
+    for (i in seq_along (join_el))
+        keep [i] <- join_el [i] %in% traj [[join_by]]
     pts [keep, ]
 }
 
@@ -42,23 +42,23 @@ filterPoints <- function (traj, pts, joinBy)
 #' @param excludelist text file containing attribute name and values
 #'
 #' @return A \code{sf} object containing the filtered points.
-excludePoints <- function (pts, excludelist)
+exclude_points <- function (pts, excludelist)
 {
     rmv <- vector (length = dim (pts) [1], mode = "logical")
     excludedat <- utils::read.table (excludelist, header = TRUE)
-    excludeBy <- names (excludedat)
-    for (exBy in excludeBy)
+    exclude_by <- names (excludedat)
+    for (ex_by in exclude_by)
     {
-        dat <- pts [[exBy]]
+        dat <- pts [[ex_by]]
         if (!is.null (dat))
         {
             for (i in seq_along (dat))
             {
-                exVec <- as.vector (excludedat [[exBy]])
-                for (ex in seq_along (exVec))
+                ex_vec <- as.vector (excludedat [[ex_by]])
+                for (ex in seq_along (ex_vec))
                 {
                     if (!rmv [i])
-                        rmv [i] <- dat [i] == exVec [ex]
+                        rmv [i] <- dat [i] == ex_vec [ex]
                 }
             }
         }
