@@ -5,3 +5,15 @@ trajectory
 ==========
 
 Tools and scripts for trajectory analysis
+
+Install
+-------
+
+``` r
+devtools::install_github ('karpfen/trajectory')
+```
+
+Code of Conduct
+---------------
+
+Please note that this project is released with a [Contributor Code of Conduct](https://github.com/karpfen/trajectory/blob/master/CONDUCT.md). By participating in this project you agree to abide by its terms.

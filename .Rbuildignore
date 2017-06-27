@@ -4,3 +4,4 @@ makefile$
 \.Rmd$
 \.html$
 ^appveyor\.yml$
+^CONDUCT\.md$
