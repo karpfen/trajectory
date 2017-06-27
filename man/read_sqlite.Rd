@@ -18,7 +18,7 @@ with valid coordinates in fields lat and lon}
 \code{ymin}, \code{xmax} and \code{ymax}.}
 }
 \value{
-A \code{data.frame} containing the entire table
+A \code{data.frame} containing the specified table contents
 }
 \description{
 Read SQLite file and return a data.frame

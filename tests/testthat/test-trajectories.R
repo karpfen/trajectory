@@ -1,7 +1,16 @@
 test_that ("make_trajectories", {
-               fName <- "../sample_db_spatial.sqlite"
+               f_name <- "../sample_db_spatial.sqlite"
                tbl <- "sampletable"
-               dat <- read_sqlite (fName, tbl)
+               dat <- read_sqlite (f_name, tbl)
+               err_msg_ord <- paste ("Specified feature to order by is not",
+                                   "present in the point data.")
+               err_msg_foi <- paste ("Specified feature of interest is not",
+                                     "present in the point data.")
+
+               testthat::expect_error (make_trajectories (dat, "speed",
+                                                          "error"), err_msg_ord)
+               testthat::expect_error (make_trajectories (dat, "error",
+                                                          "dist"), err_msg_foi)
                trj <- make_trajectories (dat, "speed", "dist", 1)
                testthat::expect_type (trj, "list")
 })

@@ -11,6 +11,11 @@
 #' @export
 make_trajectories <- function (pts, foi, order_by, n)
 {
+    col_names <- names (pts)
+    if (!foi %in% col_names)
+        stop ("Specified feature of interest is not present in the point data.")
+    if (!order_by %in% col_names)
+        stop ("Specified feature to order by is not present in the point data.")
     pts <- pts [pts [[foi]] %in% names (which (table (pts [[foi]]) > n)), ]
     feats <- unique (pts [[foi]])
     sfc <- list ("LINESTRING", length (feats))

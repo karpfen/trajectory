@@ -138,7 +138,7 @@ get_postgresql_tbl <- function (credential_file, tbl_name, out_file_name,
 #' @param bbox a numeric \code{vector} of length 4 with \code{xmin},
 #' \code{ymin}, \code{xmax} and \code{ymax}.
 #'
-#' @return A \code{data.frame} containing the entire table
+#' @return A \code{data.frame} containing the specified table contents
 #'
 #' @export
 read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
