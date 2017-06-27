@@ -8,7 +8,6 @@ matrix:
     include:
         - os: linux
           r: release
-          dist: trusty # 14.04
           env: R_CODECOV=true
         - os: linux
           r: devel
