@@ -8,6 +8,9 @@ Description: Tools and scripts for managing point data, deriving trajectories
     and performing trajectory analysis.
 Depends: R (>= 3.3.3)
 License: GPL-3 + file LICENSE
+LinkingTo:
+    Rcpp,
+    RcppArmadillo
 Imports:
     DBI,
     geosphere,
@@ -15,6 +18,7 @@ Imports:
     leaflet,
     magrittr,
     RColorBrewer,
+    Rcpp (>= 0.12.11),
     RPostgreSQL,
     RSQLite,
     sf,
@@ -23,6 +27,7 @@ Imports:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
+SystemRequirements: C++11
 URL: https://github.com/karpfen/trajectory
 BugReports: https://github.com/karpfen/trajectory
 Suggests: testthat

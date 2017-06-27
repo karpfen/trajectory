@@ -16,22 +16,27 @@ make_trajectories <- function (pts, foi, order_by, n)
         stop ("Specified feature of interest is not present in the point data.")
     if (!order_by %in% col_names)
         stop ("Specified feature to order by is not present in the point data.")
+
     pts <- pts [pts [[foi]] %in% names (which (table (pts [[foi]]) > n)), ]
     feats <- unique (pts [[foi]])
     sfc <- list ("LINESTRING", length (feats))
+    coord_list <- vector (mode = "list", length = length (feats))
     for (i in seq_along (feats))
     {
         feature <- feats [i]
         traj_pts <- pts [pts [[foi]] == feature, ]
         traj_pts <- traj_pts [order (traj_pts [[order_by]]), ]
         coords <- sf::st_coordinates (traj_pts)
+        coord_list [[i]] <- coords
         sfc [[i]] <- sf::st_linestring (coords)
     }
+    ldm <- rcpp_ldm (coord_list)
     sfc <- sf::st_sfc (sfc, crs = 4326)
     feats <- data.frame (feats)
     names (feats) <- foi
     traj <- sf::st_sf (sfc, feats)
     traj <- make_movement_indices (traj)
+    traj <- cbind (traj, ldm)
     traj [traj$trajectory_length > 0, ]
 }
 

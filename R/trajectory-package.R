@@ -15,4 +15,5 @@
 #' @importFrom shiny uiOutput textOutput plotOutput renderUI observe reactive
 #' @importFrom shiny sliderInput renderPlot renderText
 #' @importFrom utils head tail read.table
+#' @useDynLib trajectory, .registration = TRUE
 NULL
