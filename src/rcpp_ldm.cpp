@@ -17,9 +17,9 @@ float get_direction (arma::mat coords)
     arma::vec x = coords.col (0);
     arma::vec y = coords.col (1);
     arma::vec x0 = x.subvec (0, x.size () - 2);
-    arma::vec y0 = x.subvec (0, y.size () - 2);
+    arma::vec y0 = y.subvec (0, y.size () - 2);
     arma::vec x1 = x.subvec (1, x.size () - 1);
-    arma::vec y1 = x.subvec (1, y.size () - 1);
+    arma::vec y1 = y.subvec (1, y.size () - 1);
 
     arma::vec dx = x1 - x0;
     arma::vec dy = y1 - y0;
@@ -28,7 +28,7 @@ float get_direction (arma::mat coords)
     arma::vec cosines = cos (theta);
     float sum_sines = arma::accu (sines);
     float sum_cosines = arma::accu (cosines);
-    float ldm = atan2 (sum_sines, sum_cosines);
+    float ldm = (atan2 (sum_sines, sum_cosines) / M_PI) * 180;
     
     if (sum_sines > 0 && sum_cosines < 0)
         ldm = 180 - ldm;
@@ -36,8 +36,10 @@ float get_direction (arma::mat coords)
         ldm = 360 - ldm;
     else if (sum_sines < 0 && sum_cosines < 0)
         ldm = 180 - ldm;
-    if (ldm >= 360)
+    while (ldm >= 360)
         ldm -= 360;
+    while (ldm < 0)
+        ldm += 360;
     return ldm;
 }
 
