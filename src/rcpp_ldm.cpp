@@ -29,17 +29,6 @@ float get_direction (arma::mat coords)
     float sum_sines = arma::accu (sines);
     float sum_cosines = arma::accu (cosines);
     float ldm = (atan2 (sum_sines, sum_cosines) / M_PI) * 180;
-    
-    if (sum_sines > 0 && sum_cosines < 0)
-        ldm = 180 - ldm;
-    else if (sum_sines < 0 && sum_cosines > 0)
-        ldm = 360 - ldm;
-    else if (sum_sines < 0 && sum_cosines < 0)
-        ldm = 180 - ldm;
-    while (ldm >= 360)
-        ldm -= 360;
-    while (ldm < 0)
-        ldm += 360;
     return ldm;
 }
 
