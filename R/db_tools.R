@@ -1,16 +1,16 @@
 #' Fetches data from a PostgreSQL table and writes it to a local SQLite file
 #'
-#' @param credential_file A csv file containing the database credentials
+#' @param credential_file A csv file containing the database credentials.
 #'
-#' @param tbl_name Name of the table to be downloaded
+#' @param tbl_name Name of the table to be downloaded.
 #'
-#' @param out_file_name Name of the output file
+#' @param out_file_name Name of the output file.
 #'
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
 #'
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
-#' size
+#' size.
 #'
 #' @export
 postgres2sqlite <- function (credential_file, tbl_name, out_file_name,
@@ -29,17 +29,17 @@ postgres2sqlite <- function (credential_file, tbl_name, out_file_name,
 #'
 #' Rows without geometries will be omitted.
 #'
-#' @param credential_file A csv file containing the database credentials
+#' @param credential_file A csv file containing the database credentials.
 #'
-#' @param tbl_name Name of the table to be downloaded
+#' @param tbl_name Name of the table to be downloaded.
 #'
-#' @param out_file_name Name of the output file
+#' @param out_file_name Name of the output file.
 #'
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
 #'
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
-#' size
+#' size.
 #'
 #' @export
 postgres2gpkg <- function (credential_file, tbl_name, out_file_name, bbx = NULL,
@@ -66,17 +66,17 @@ postgres2gpkg <- function (credential_file, tbl_name, out_file_name, bbx = NULL,
 
 #' Fetches data from a PostgreSQL table returns it as a data.frame
 #'
-#' @param credential_file A csv file containing the database credentials
+#' @param credential_file A csv file containing the database credentials.
 #'
-#' @param tbl_name Name of the table to be downloaded
+#' @param tbl_name Name of the table to be downloaded.
 #'
-#' @param out_file_name Name of the output file
+#' @param out_file_name Name of the output file.
 #'
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
 #'
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
-#' size
+#' size.
 #'
 #' @noRd
 get_postgresql_tbl <- function (credential_file, tbl_name, out_file_name,
@@ -143,17 +143,17 @@ get_postgresql_tbl <- function (credential_file, tbl_name, out_file_name,
 
 #' Read SQLite file and return a data.frame
 #'
-#' @param f_name Name of the SQLite file
+#' @param f_name Name of the SQLite file.
 #'
-#' @param tbl_name Name of the table to be fetched
+#' @param tbl_name Name of the table to be fetched.
 #'
 #' @param sf if \code{TRUE}, returns a \code{sf} object containing only data
-#' with valid coordinates in fields lat and lon
+#' with valid coordinates in fields lat and lon.
 #'
 #' @param bbox a numeric \code{vector} of length 4 with \code{xmin},
 #' \code{ymin}, \code{xmax} and \code{ymax}.
 #'
-#' @return A \code{data.frame} containing the specified table contents
+#' @return A \code{data.frame} containing the specified table contents.
 #'
 #' @export
 read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
@@ -229,7 +229,7 @@ read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
 #' @param bbox a numeric \code{vector} of length 4 with \code{xmin},
 #' \code{ymin}, \code{xmax} and \code{ymax}.
 #'
-#' @return A \code{data.frame} containing the specified table contents
+#' @return A \code{data.frame} containing the specified table contents.
 #'
 #' @export
 read_gpkg <- function (f_name, bbox = NULL)
@@ -262,4 +262,18 @@ read_gpkg <- function (f_name, bbox = NULL)
     if (dim (dat) [1] == 0)
         stop ("Query yields no results.")
     dat
+}
+
+#' Write spatial data object to GeoPackage file
+#'
+#' @param dat \code{sf} object containing spatial data.
+#'
+#' @param out_file_name File name of the saved object.
+#'
+#' @export
+write_gpkg <- function (dat, out_file_name)
+{
+    if (!endsWith (tolower (out_file_name), ".gpkg"))
+        out_file_name <- paste0 (out_file_name, ".gpkg")
+    sf::st_write (dat, out_file_name)
 }

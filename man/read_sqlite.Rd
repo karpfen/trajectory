@@ -7,18 +7,18 @@
 read_sqlite(f_name, tbl_name, sf = TRUE, bbox = NULL)
 }
 \arguments{
-\item{f_name}{Name of the SQLite file}
+\item{f_name}{Name of the SQLite file.}
 
-\item{tbl_name}{Name of the table to be fetched}
+\item{tbl_name}{Name of the table to be fetched.}
 
 \item{sf}{if \code{TRUE}, returns a \code{sf} object containing only data
-with valid coordinates in fields lat and lon}
+with valid coordinates in fields lat and lon.}
 
 \item{bbox}{a numeric \code{vector} of length 4 with \code{xmin},
 \code{ymin}, \code{xmax} and \code{ymax}.}
 }
 \value{
-A \code{data.frame} containing the specified table contents
+A \code{data.frame} containing the specified table contents.
 }
 \description{
 Read SQLite file and return a data.frame

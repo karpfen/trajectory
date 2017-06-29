@@ -8,17 +8,17 @@ postgres2sqlite(credential_file, tbl_name, out_file_name, bbx = NULL,
   ask = TRUE)
 }
 \arguments{
-\item{credential_file}{A csv file containing the database credentials}
+\item{credential_file}{A csv file containing the database credentials.}
 
-\item{tbl_name}{Name of the table to be downloaded}
+\item{tbl_name}{Name of the table to be downloaded.}
 
-\item{out_file_name}{Name of the output file}
+\item{out_file_name}{Name of the output file.}
 
 \item{bbx}{Optional bounding box. A numeric \code{vector} of length 4 with
 \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.}
 
 \item{ask}{if \code{TRUE}, ask user for confirmation after showing the table
-size}
+size.}
 }
 \description{
 Fetches data from a PostgreSQL table and writes it to a local SQLite file

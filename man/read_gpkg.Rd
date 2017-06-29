@@ -13,7 +13,7 @@ read_gpkg(f_name, bbox = NULL)
 \code{ymin}, \code{xmax} and \code{ymax}.}
 }
 \value{
-A \code{data.frame} containing the specified table contents
+A \code{data.frame} containing the specified table contents.
 }
 \description{
 Read GeoPackage file and return a spatial data.frame
