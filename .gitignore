@@ -35,4 +35,4 @@ vignettes/*.pdf
 dbConfig.csv
 *.html
 
-excludelist.csv
+./excludelist.csv
