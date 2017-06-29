@@ -17,8 +17,8 @@ plot_ldm <- function (traj)
                                                    x = traj$ldm,
                                                    colour = traj$classes)) +
         ggplot2::geom_point (ggplot2::aes (size = traj$number_of_points)) +
-        ggplot2::coord_polar (start =  -pi / 2) +
+        ggplot2::coord_polar (start = -pi / 2, direction = -1) +
         ggplot2::theme_bw () +
         ggplot2::scale_y_continuous (trans = "log") +
-        ggplot2::scale_x_continuous (limits = c (-180, 180))
+        ggplot2::scale_x_continuous (limits = c (0, 360), breaks = 0:7 * 45)
 }
