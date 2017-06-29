@@ -1,12 +1,14 @@
-source ("R/utils.R")
-
 #' Fetches data from a PostgreSQL table and writes it to a local SQLite file
 #'
 #' @param credential_file A csv file containing the database credentials
+#'
 #' @param tbl_name Name of the table to be downloaded
+#'
 #' @param out_file_name Name of the output file
+#'
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
+#'
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size
 #'
@@ -28,10 +30,14 @@ postgres2sqlite <- function (credential_file, tbl_name, out_file_name,
 #' Rows without geometries will be omitted.
 #'
 #' @param credential_file A csv file containing the database credentials
+#'
 #' @param tbl_name Name of the table to be downloaded
+#'
 #' @param out_file_name Name of the output file
+#'
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
+#'
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size
 #'
@@ -61,12 +67,18 @@ postgres2gpkg <- function (credential_file, tbl_name, out_file_name, bbx = NULL,
 #' Fetches data from a PostgreSQL table returns it as a data.frame
 #'
 #' @param credential_file A csv file containing the database credentials
+#'
 #' @param tbl_name Name of the table to be downloaded
+#'
 #' @param out_file_name Name of the output file
+#'
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
+#'
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size
+#'
+#' @noRd
 get_postgresql_tbl <- function (credential_file, tbl_name, out_file_name,
                                 bbx = NULL, ask=TRUE)
 {
@@ -132,9 +144,12 @@ get_postgresql_tbl <- function (credential_file, tbl_name, out_file_name,
 #' Read SQLite file and return a data.frame
 #'
 #' @param f_name Name of the SQLite file
+#'
 #' @param tbl_name Name of the table to be fetched
+#'
 #' @param sf if \code{TRUE}, returns a \code{sf} object containing only data
 #' with valid coordinates in fields lat and lon
+#'
 #' @param bbox a numeric \code{vector} of length 4 with \code{xmin},
 #' \code{ymin}, \code{xmax} and \code{ymax}.
 #'
@@ -157,7 +172,7 @@ read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
         {
             bbox <- NULL
             msg <- "bbox is not a numeric vector of length 4. Ignoring bbox."
-            print (msg)
+            warning (msg)
         }
         if (is.null (bbox))
             dat <- RSQLite::dbReadTable (conn_sqlite, tbl_name)
@@ -185,7 +200,7 @@ read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
     {
         if (!all (c ("lat", "lon") %in% names (dat)))
         {
-            print ("SQLite file does not contain fields lat and long. Returning
+            warning ("SQLite file does not contain fields lat and long. Returning
                    regular data.frame.")
                    return (dat)
         }
@@ -205,4 +220,46 @@ read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
     }
     else
         dat
+}
+
+#' Read GeoPackage file and return a spatial data.frame
+#'
+#' @param f_name Name of the GPKG file
+#'
+#' @param bbox a numeric \code{vector} of length 4 with \code{xmin},
+#' \code{ymin}, \code{xmax} and \code{ymax}.
+#'
+#' @return A \code{data.frame} containing the specified table contents
+#'
+#' @export
+read_gpkg <- function (f_name, bbox = NULL)
+{
+    if (!file.exists (f_name))
+    {
+        msg <- paste0 ("GPKG file '", f_name, "' not found.")
+        stop (msg)
+    }
+    dat <- sf::st_read (f_name, quiet = TRUE)
+    if (!is.null (bbox) & !is.numeric (bbox) & length (bbox) != 4)
+    {
+        bbox <- NULL
+        msg <- "bbox is not a numeric vector of length 4. Ignoring bbox."
+        warning (msg)
+    }
+    if (!is.null (bbox))
+    {
+        p1 <- paste0 (bbox [1], " ", bbox [2])
+        p2 <- paste0 (bbox [1], " ", bbox [4])
+        p3 <- paste0 (bbox [3], " ", bbox [4])
+        p4 <- paste0 (bbox [3], " ", bbox [2])
+        pol_wkt <- paste0 ("POLYGON((", p1, ", ", p2, ", ", p3, ", ", p4, ", ",
+                           p1, "))")
+        crs <- sf::st_crs (dat)
+        bbox_pol <- sf::st_as_sfc (pol_wkt, crs = crs)
+        in_bbx <- sf::st_within (dat, bbox_pol, sparse = FALSE)
+        dat <- dat [in_bbx, ]
+    }
+    if (dim (dat) [1] == 0)
+        stop ("Query yields no results.")
+    dat
 }
