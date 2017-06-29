@@ -11,6 +11,6 @@ test_that ("make_trajectories", {
                                                           "error"), err_msg_ord)
                testthat::expect_error (make_trajectories (dat, "error",
                                                           "dist"), err_msg_foi)
-               trj <- make_trajectories (dat, "speed", "dist", 1)
+               trj <- make_trajectories (dat, "speed", "dist", 2)
                testthat::expect_type (trj, "list")
 })
