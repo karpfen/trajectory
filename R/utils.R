@@ -21,7 +21,9 @@ read_credentials <- function (f_name)
 #' Returns only the points that share a specified attribute with trajectories.
 #'
 #' @param traj \code{sf} object containing the trajectories.
+#'
 #' @param pts \code{sf} object containing points.
+#'
 #' @param join_by shared attribute by which to filter.
 #'
 #' @return A \code{sf} object containing the filtered points.
@@ -39,9 +41,12 @@ filter_points <- function (traj, pts, join_by)
 #' Returns only the points that are not listed
 #'
 #' @param pts \code{sf} object containing points.
+#'
 #' @param excludelist text file containing attribute name and values
 #'
 #' @return A \code{sf} object containing the filtered points.
+#'
+#' @export
 exclude_points <- function (pts, excludelist)
 {
     rmv <- vector (length = dim (pts) [1], mode = "logical")
