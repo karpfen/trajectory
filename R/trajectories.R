@@ -20,7 +20,7 @@ make_trajectories <- function (pts, foi, order_by, n)
     if (!order_by %in% col_names)
         stop ("Specified feature to order by is not present in the point data.")
 
-    pts <- pts [pts [[foi]] %in% names (which (table (pts [[foi]]) > n)), ]
+    pts <- pts [pts [[foi]] %in% names (which (table (pts [[foi]]) >= n)), ]
     feats <- unique (pts [[foi]])
     sfc <- list ("LINESTRING", length (feats))
     coord_list <- vector (mode = "list", length = length (feats))
