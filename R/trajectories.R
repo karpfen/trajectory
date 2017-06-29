@@ -1,12 +1,15 @@
 #' Creates a set of trajectories from a sfc of points
 #'
-#' @param pts \code{sf} object containing points
-#' @param foi Feature of interest by which the different trajectories are
-#' differentiated
-#' @param order_by Field by which points are ordered
-#' @param n minimum number of points per trajectory
+#' @param pts \code{sf} object containing points.
 #'
-#' @return A \code{sf} object containing the trajectories
+#' @param foi Feature of interest by which the different trajectories are
+#' differentiated.
+#'
+#' @param order_by Field by which points are ordered.
+#'
+#' @param n minimum number of points per trajectory.
+#'
+#' @return A \code{sf} object containing the trajectories.
 #'
 #' @export
 make_trajectories <- function (pts, foi, order_by, n)
@@ -43,11 +46,12 @@ make_trajectories <- function (pts, foi, order_by, n)
 #' Calculates a number of movement indices for each trajectory
 #'
 #' Calculates average distance travelled per point and great circle distance
-#' covered between start and end point for each trajectory in metres
+#' covered between start and end point for each trajectory in metres.
 #'
-#' @param traj \code{sf} object containing the trajectories
+#' @param traj \code{sf} object containing the trajectories.
 #'
-#' @return A \code{sf} object containing the trajectories with additional fields
+#' @return A \code{sf} object containing the trajectories with additional
+#' fields.
 make_movement_indices <- function (traj)
 {
     len <- dim (traj) [1]
@@ -76,4 +80,17 @@ make_movement_indices <- function (traj)
     }
     cbind (traj, trajectory_length, length_start_end, distance_per_point,
            number_of_points)
+}
+
+#' Calculates the linear directional mean of all trajectories combined
+#'
+#' @param traj \code{sf} object containing trajectories.
+#'
+#' @return the linear directional mean in degrees over all given trajectories.
+#'
+#' @export
+get_overall_ldm <- function (traj)
+{
+    coords <- sf::st_coordinates (traj) [, 1:2] %>% matrix (ncol = 2) %>% list
+    rcpp_ldm (coords)
 }

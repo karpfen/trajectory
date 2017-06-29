@@ -7,12 +7,13 @@
 make_movement_indices(traj)
 }
 \arguments{
-\item{traj}{\code{sf} object containing the trajectories}
+\item{traj}{\code{sf} object containing the trajectories.}
 }
 \value{
-A \code{sf} object containing the trajectories with additional fields
+A \code{sf} object containing the trajectories with additional
+fields.
 }
 \description{
 Calculates average distance travelled per point and great circle distance
-covered between start and end point for each trajectory in metres
+covered between start and end point for each trajectory in metres.
 }

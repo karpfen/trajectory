@@ -7,17 +7,17 @@
 make_trajectories(pts, foi, order_by, n)
 }
 \arguments{
-\item{pts}{\code{sf} object containing points}
+\item{pts}{\code{sf} object containing points.}
 
 \item{foi}{Feature of interest by which the different trajectories are
-differentiated}
+differentiated.}
 
-\item{order_by}{Field by which points are ordered}
+\item{order_by}{Field by which points are ordered.}
 
-\item{n}{minimum number of points per trajectory}
+\item{n}{minimum number of points per trajectory.}
 }
 \value{
-A \code{sf} object containing the trajectories
+A \code{sf} object containing the trajectories.
 }
 \description{
 Creates a set of trajectories from a sfc of points
