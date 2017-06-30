@@ -4,14 +4,16 @@ test_that ("plot_ldm", {
                pts <- read_sqlite (f_name, tbl)
                traj <- make_trajectories (pts, "speed", "dist", 2)
                traj$ldm <- runif (dim (traj) [1])
-               pl <- plot_ldm (traj, "ldm", "ldm", "ldm")
+               pl <- plot_ldm (traj, "ldm", "ldm")
                testthat::expect_type (pl, "list")
                e_msg <- "Attribute 'err' is not present in the trajectory data."
-               testthat::expect_error (plot_ldm (traj, "err", "ldm", "ldm"),
+               testthat::expect_error (plot_ldm (traj, "err", "ldm"),
                                        e_msg)
-               testthat::expect_error (plot_ldm (traj, "ldm", "err", "ldm"),
+               testthat::expect_error (plot_ldm (traj, "ldm", "err"),
                                        e_msg)
-               testthat::expect_error (plot_ldm (traj, "ldm", "ldm", "err"),
+               traj$ldm <- NULL
+               e_msg <- "Attribute 'ldm' is not present in the trajectory data."
+               testthat::expect_error (plot_ldm (traj, "dist", "dist"),
                                        e_msg)
 
 })

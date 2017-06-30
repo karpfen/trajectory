@@ -2,21 +2,19 @@
 % Please edit documentation in R/plot_data.R
 \name{plot_ldm}
 \alias{plot_ldm}
-\title{Generates a polar plot showing the linear directional mean and trajectory
-length.}
+\title{Generates a polar plot showing the linear directional mean of all
+trajectories.}
 \usage{
-plot_ldm(traj, x, y, size)
+plot_ldm(traj, y, size)
 }
 \arguments{
-\item{traj}{\code{sfc} containing trajectories.}
-
-\item{x}{The parameter displayed on the x axis.}
+\item{traj}{\code{sfc} containing trajectories and a ldm attribute.}
 
 \item{y}{The parameter displayed on the y axis.}
 
-\item{size}{The attribute represented by dot size or a fixed value.}
+\item{size}{The attribute defining the point size in the plot.}
 }
 \description{
-Generates a polar plot showing the linear directional mean and trajectory
-length.
+Generates a polar plot showing the linear directional mean of all
+trajectories.
 }
