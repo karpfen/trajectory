@@ -5,10 +5,16 @@
 \title{Generates a polar plot showing the linear directional mean and trajectory
 length.}
 \usage{
-plot_ldm(traj)
+plot_ldm(traj, x, y, size)
 }
 \arguments{
 \item{traj}{\code{sfc} containing trajectories.}
+
+\item{x}{The parameter displayed on the x axis.}
+
+\item{y}{The parameter displayed on the y axis.}
+
+\item{size}{The attribute represented by dot size or a fixed value.}
 }
 \description{
 Generates a polar plot showing the linear directional mean and trajectory
