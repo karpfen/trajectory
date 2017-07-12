@@ -22,6 +22,7 @@ Imports:
     RPostgreSQL,
     RSQLite,
     sf,
+    tmap,
     shiny,
     utils
 Encoding: UTF-8

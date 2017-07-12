@@ -17,3 +17,21 @@ test_that ("plot_ldm", {
                                        e_msg)
 
 })
+
+test_that ("test_shifty90", {
+    x <- 100
+    x_shift <- shifty90 (x)
+    testthat::expect_equal (x_shift, 10)
+    x <- -100
+    x_shift <- shifty90 (x)
+    testthat::expect_equal (x_shift, -10)
+})
+
+test_that ("test_shifty180", {
+    x <- 200
+    x_shift <- shiftx180 (x)
+    testthat::expect_equal (x_shift, 20)
+    x <- -200
+    x_shift <- shiftx180 (x)
+    testthat::expect_equal (x_shift, -20)
+})

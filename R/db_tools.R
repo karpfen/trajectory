@@ -208,8 +208,8 @@ read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
         pts <- list ("POINT", dim (dat) [1])
         for (i in 1:dim (dat) [1])
         {
-            ln <- dat$lon [i]
-            lt <- dat$lat [i]
+            ln <- dat$lon [i] %>% round (5)
+            lt <- dat$lat [i] %>% round (5)
             pts [[i]] <- sf::st_point (c (ln, lt), "XY")
         }
         sfc <- sf::st_sfc (pts, crs = 4326)
