@@ -14,3 +14,12 @@ test_that ("make_trajectories", {
                trj <- make_trajectories (dat, "speed", "dist", 2)
                testthat::expect_type (trj, "list")
 })
+
+test_that ("overall_ldm", {
+               f_name <- "../sample_db_spatial.sqlite"
+               tbl <- "sampletable"
+               dat <- read_sqlite (f_name, tbl)
+               trj <- make_trajectories (dat, "speed", "dist", 2)
+               ldm <- get_overall_ldm (trj)
+               testthat::expect_equal (ldm, 270)
+})
