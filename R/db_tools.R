@@ -200,8 +200,8 @@ read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
     {
         if (!all (c ("lat", "lon") %in% names (dat)))
         {
-            warning ("SQLite file does not contain fields lat and long. Returning
-                   regular data.frame.")
+            warning ("SQLite file does not contain fields lat and long.
+                     Returning regular data.frame.")
                    return (dat)
         }
         dat <- dat [!is.na (dat$lat), ]
