@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // rcpp_ldm
 Rcpp::NumericVector rcpp_ldm(Rcpp::List trj);
-RcppExport SEXP trajectory_rcpp_ldm(SEXP trjSEXP) {
+RcppExport SEXP _trajectory_rcpp_ldm(SEXP trjSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"trajectory_rcpp_ldm", (DL_FUNC) &trajectory_rcpp_ldm, 1},
+    {"_trajectory_rcpp_ldm", (DL_FUNC) &_trajectory_rcpp_ldm, 1},
     {NULL, NULL, 0}
 };
 

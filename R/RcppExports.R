@@ -25,6 +25,6 @@ NULL
 #'
 #' @noRd
 rcpp_ldm <- function(trj) {
-    .Call(trajectory_rcpp_ldm, trj)
+    .Call(`_trajectory_rcpp_ldm`, trj)
 }
 
