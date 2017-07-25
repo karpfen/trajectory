@@ -109,6 +109,8 @@ server <- function (input, output, session)
                                                       dat_pts)) %>%
             leaflet::addLegend (position = "bottomleft", pal = pal,
                                 values = dat_traj [[clrBy]], title = clrBy) %>%
+            leaflet::addScaleBar (position = "bottomright", options =
+                leaflet::scaleBarOptions(imperial = FALSE)) %>%
             leaflet::addLayersControl (overlayGroups = c ("Trajectories",
                                        "Points"), options =
                                        leaflet::layersControlOptions (collapsed=
