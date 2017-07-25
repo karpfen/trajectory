@@ -3,6 +3,7 @@
 export(exclude_points)
 export(get_overall_ldm)
 export(make_trajectories)
+export(plot_arrow_map)
 export(plot_ldm)
 export(plot_leaflet)
 export(plot_static)

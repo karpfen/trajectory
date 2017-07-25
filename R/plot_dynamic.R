@@ -12,14 +12,14 @@ plot_leaflet <- function (traj, pts)
         stop ("pts must contain geometries of type POINT.")
     map_data_traj <<- traj
     map_data_pts <<- pts
-    shiny::shinyApp (ui, server)
+    shiny::shinyApp (ui_dyn, server_dyn)
 }
 
 map_data_pts <- NULL
 map_data_traj <- NULL
-ui <- NULL
+ui_dyn <- NULL
 c_ramp <- subset (RColorBrewer::brewer.pal.info, category == "seq")
-ui <- shiny::bootstrapPage (
+ui_dyn <- shiny::bootstrapPage (
     shiny::tags$style (type = "text/css", "html,
                        body{width:100%;height:100%;} .checkbox,
                        h4, .control-label, #num_pts, #num_trj
@@ -38,7 +38,7 @@ ui <- shiny::bootstrapPage (
     )
 )
 
-server <- function (input, output, session)
+server_dyn <- function (input, output, session)
 {
     cols <- names (map_data_traj)
     numeric_fields <- sapply (map_data_traj, is.numeric)
