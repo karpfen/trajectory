@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 [![Build Status](https://travis-ci.org/karpfen/trajectory.svg?branch=master)](https://travis-ci.org/karpfen/trajectory)
 [![Build status](https://ci.appveyor.com/api/projects/status/qg1crx6lgsva4j9w?svg=true)](https://ci.appveyor.com/project/karpfen/trajectory)
 [![codecov](https://codecov.io/gh/karpfen/trajectory/branch/master/graph/badge.svg)](https://codecov.io/gh/karpfen/trajectory)
+[![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the
+public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
 
 # trajectory
 Tools and scripts for trajectory analysis
