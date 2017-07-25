@@ -58,7 +58,7 @@ server <- function (input, output, session)
         })
     })
 
-    ln_color <- function (x, colorBy) { leaflet::colorFactor (x, colorBy) } 
+    ln_color <- function (x, color_by) { leaflet::colorFactor (x, color_by) }
 
     output$map <- leaflet::renderLeaflet ({
         dat <- map_data_traj
@@ -147,7 +147,7 @@ popup <- function (ptitle, pnames, pvalues)
     for (i in seq_along (pnames))
     {
         att <- pnames [i]
-        val <- format (pvalues [[att]], digits = 3, nsmall = 2)
+        val <- format (pvalues [[i]], digits = 3, nsmall = 2)
         txt %<>% paste0 ("</br><b>", att, ": </b>", val)
     }
     txt
