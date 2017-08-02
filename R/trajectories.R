@@ -94,3 +94,45 @@ get_overall_ldm <- function (traj)
     coords <- sf::st_coordinates (traj) [, 1:2] %>% matrix (ncol = 2) %>% list
     rcpp_ldm (coords)
 }
+
+#' Make each trajectory a straight line of its cummulated length in its general
+#' direction
+#'
+#' @param traj \code{sf} object containing trajectories.
+#'
+#' @return \code{sf} object containing straight lines.
+#'
+#' @export
+make_arrows <- function (traj)
+{
+    traj <- traj [traj$length_start_end > 0, ]
+
+    len <- dim (traj) [1]
+    sfc <- list ("LINESTRING", len)
+
+    for (i in seq_len (len))
+    {
+        trj <- traj [i, ]
+        coords <- sf::st_coordinates (trj)
+        st <- c (coords [1, 1], coords [1, 2])
+        ln <- dim (coords) [1]
+        en <- c (coords [ln, 1], coords [ln, 2])
+
+        end_pt <- shift_to_angle (st, en, trj$ldm)
+        sfc [[i]] <- sf::st_linestring (rbind (st, end_pt))
+    }
+    sfc <- sf::st_sfc (sfc, crs = 4326)
+    sf::st_sf (sfc, traj)
+}
+
+shift_to_angle <- function (c1, c2, angle)
+{
+    dx <- c2 [1] - c1 [1]
+    dy <- c2 [2] - c1 [2]
+    r <- sqrt (dx^2 + dy^2)
+
+    angle_rad <- (angle / 180) * pi
+    x <- r * cos (angle_rad) + c1 [1]
+    y <- r * sin (angle_rad) + c1 [2]
+    c (x, y)
+}
