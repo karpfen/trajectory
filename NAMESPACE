@@ -2,6 +2,7 @@
 
 export(exclude_points)
 export(get_overall_ldm)
+export(make_arrows)
 export(make_trajectories)
 export(plot_arrow_map)
 export(plot_ldm)

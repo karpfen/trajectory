@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_static.R
 \name{plot_static}
 \alias{plot_static}
-\title{Generates a static map of the given set of trajectories.}
+\title{Generate a static map of the given set of trajectories}
 \usage{
 plot_static(traj, buffer = 0)
 }
@@ -12,5 +12,5 @@ plot_static(traj, buffer = 0)
 \item{buffer}{Buffer of area to include around the trajectories.}
 }
 \description{
-Generates a static map of the given set of trajectories.
+Generate a static map of the given set of trajectories
 }

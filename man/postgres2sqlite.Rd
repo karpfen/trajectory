@@ -2,7 +2,7 @@
 % Please edit documentation in R/db_tools.R
 \name{postgres2sqlite}
 \alias{postgres2sqlite}
-\title{Fetches data from a PostgreSQL table and writes it to a local SQLite file}
+\title{Fetch data from a PostgreSQL table and write it to a local SQLite file}
 \usage{
 postgres2sqlite(credential_file, tbl_name, out_file_name, bbx = NULL,
   ask = TRUE)
@@ -21,5 +21,5 @@ postgres2sqlite(credential_file, tbl_name, out_file_name, bbx = NULL,
 size.}
 }
 \description{
-Fetches data from a PostgreSQL table and writes it to a local SQLite file
+Fetch data from a PostgreSQL table and write it to a local SQLite file
 }

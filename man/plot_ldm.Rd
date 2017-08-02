@@ -2,8 +2,8 @@
 % Please edit documentation in R/plot_static.R
 \name{plot_ldm}
 \alias{plot_ldm}
-\title{Generates a polar plot showing the linear directional mean of all
-trajectories.}
+\title{Generate a polar plot showing the linear directional mean of all
+trajectories}
 \usage{
 plot_ldm(traj, y, size)
 }
@@ -15,6 +15,6 @@ plot_ldm(traj, y, size)
 \item{size}{The attribute defining the point size in the plot.}
 }
 \description{
-Generates a polar plot showing the linear directional mean of all
-trajectories.
+Generate a polar plot showing the linear directional mean of all
+trajectories
 }

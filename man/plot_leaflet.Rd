@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_dynamic.R
 \name{plot_leaflet}
 \alias{plot_leaflet}
-\title{Plots trajectory and point data as a shiny leaflet map}
+\title{Plot trajectory and point data as a shiny leaflet map}
 \usage{
 plot_leaflet(traj, pts)
 }
@@ -12,5 +12,5 @@ plot_leaflet(traj, pts)
 \item{pts}{\code{sf} object containing point data to display.}
 }
 \description{
-Plots trajectory and point data as a shiny leaflet map
+Plot trajectory and point data as a shiny leaflet map
 }

@@ -2,9 +2,9 @@
 #'
 #' Reads a csv containing database information and returns them as a data.frame.
 #'
-#' @param f_name Filename of the csv file containing the credentials
+#' @param f_name Filename of the csv file containing the credentials.
 #'
-#' @return A \code{data.frame} containing the credentials
+#' @return A \code{data.frame} containing the credentials.
 read_credentials <- function (f_name)
 {
     dat <- utils::read.csv2 (f_name, header = FALSE)
@@ -21,9 +21,7 @@ read_credentials <- function (f_name)
 #' Returns only the points that share a specified attribute with trajectories.
 #'
 #' @param traj \code{sf} object containing the trajectories.
-#'
 #' @param pts \code{sf} object containing points.
-#'
 #' @param join_by shared attribute by which to filter.
 #'
 #' @return A \code{sf} object containing the filtered points.
@@ -38,12 +36,10 @@ filter_points <- function (traj, pts, join_by)
 
 #' Filter points based on attribute values in a list
 #'
-#' Returns only the points that are not listed
+#' Returns only the points that are not listed.
 #'
 #' @param pts \code{sf} object containing points.
-#'
-#' @param excludelist text file containing attribute name and values
-#'
+#' @param excludelist text file containing attribute name and values.
 #' @return A \code{sf} object containing the filtered points.
 #'
 #' @export

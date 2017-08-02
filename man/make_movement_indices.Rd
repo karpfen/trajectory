@@ -2,7 +2,7 @@
 % Please edit documentation in R/trajectories.R
 \name{make_movement_indices}
 \alias{make_movement_indices}
-\title{Calculates a number of movement indices for each trajectory}
+\title{Calculate a number of movement indices for each trajectory}
 \usage{
 make_movement_indices(traj)
 }

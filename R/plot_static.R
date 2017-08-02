@@ -1,10 +1,8 @@
-#' Generates a polar plot showing the linear directional mean of all
-#' trajectories.
+#' Generate a polar plot showing the linear directional mean of all
+#' trajectories
 #'
 #' @param traj \code{sfc} containing trajectories and a ldm attribute.
-#'
 #' @param y The parameter displayed on the y axis.
-#'
 #' @param size The attribute defining the point size in the plot.
 #'
 #' @export
@@ -64,10 +62,9 @@ shifty90 <- function (y)
     return (y)
 }
 
-#' Generates a static map of the given set of trajectories.
+#' Generate a static map of the given set of trajectories
 #'
 #' @param traj \code{sfc} containing trajectories and a ldm attribute.
-#'
 #' @param buffer Buffer of area to include around the trajectories.
 #'
 #' @export

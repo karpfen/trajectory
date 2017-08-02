@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_arrow_map.R
 \name{plot_arrow_map}
 \alias{plot_arrow_map}
-\title{Plots trajectory data as a shiny leaflet arrow map}
+\title{Plot trajectory data as a shiny leaflet arrow map}
 \usage{
 plot_arrow_map(traj)
 }
@@ -10,5 +10,5 @@ plot_arrow_map(traj)
 \item{traj}{\code{sf} object containing trajectory data to display.}
 }
 \description{
-Plots trajectory data as a shiny leaflet arrow map
+Plot trajectory data as a shiny leaflet arrow map
 }

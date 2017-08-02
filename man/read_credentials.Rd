@@ -7,10 +7,10 @@
 read_credentials(f_name)
 }
 \arguments{
-\item{f_name}{Filename of the csv file containing the credentials}
+\item{f_name}{Filename of the csv file containing the credentials.}
 }
 \value{
-A \code{data.frame} containing the credentials
+A \code{data.frame} containing the credentials.
 }
 \description{
 Reads a csv containing database information and returns them as a data.frame.

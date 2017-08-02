@@ -9,11 +9,11 @@ exclude_points(pts, excludelist)
 \arguments{
 \item{pts}{\code{sf} object containing points.}
 
-\item{excludelist}{text file containing attribute name and values}
+\item{excludelist}{text file containing attribute name and values.}
 }
 \value{
 A \code{sf} object containing the filtered points.
 }
 \description{
-Returns only the points that are not listed
+Returns only the points that are not listed.
 }

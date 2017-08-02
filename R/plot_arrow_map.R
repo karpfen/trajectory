@@ -1,4 +1,4 @@
-#' Plots trajectory data as a shiny leaflet arrow map
+#' Plot trajectory data as a shiny leaflet arrow map
 #'
 #' @param traj \code{sf} object containing trajectory data to display.
 #'
@@ -34,7 +34,7 @@ server_arrow <- function (input, output, session)
     })
 }
 
-#' Takes a simple feature collection of lines and replaces the line geometry
+#' Take a simple feature collection of lines and replaces the line geometry
 #' either with the start or end point of the lines
 #'
 #' @param traj \code{sf} object containing trajectory data to display.

@@ -7,7 +7,7 @@
 read_gpkg(f_name, bbox = NULL)
 }
 \arguments{
-\item{f_name}{Name of the GPKG file}
+\item{f_name}{Name of the GPKG file.}
 
 \item{bbox}{a numeric \code{vector} of length 4 with \code{xmin},
 \code{ymin}, \code{xmax} and \code{ymax}.}

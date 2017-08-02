@@ -2,7 +2,7 @@
 % Please edit documentation in R/trajectories.R
 \name{make_trajectories}
 \alias{make_trajectories}
-\title{Creates a set of trajectories from a sfc of points}
+\title{Create a set of trajectories from a sfc of points}
 \usage{
 make_trajectories(pts, foi, order_by, n)
 }
@@ -20,5 +20,5 @@ differentiated.}
 A \code{sf} object containing the trajectories.
 }
 \description{
-Creates a set of trajectories from a sfc of points
+Create a set of trajectories from a sfc of points
 }

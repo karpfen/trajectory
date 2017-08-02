@@ -2,7 +2,7 @@
 % Please edit documentation in R/trajectories.R
 \name{get_overall_ldm}
 \alias{get_overall_ldm}
-\title{Calculates the linear directional mean of all trajectories combined}
+\title{Calculate the linear directional mean of all trajectories combined}
 \usage{
 get_overall_ldm(traj)
 }
@@ -13,5 +13,5 @@ get_overall_ldm(traj)
 the linear directional mean in degrees over all given trajectories.
 }
 \description{
-Calculates the linear directional mean of all trajectories combined
+Calculate the linear directional mean of all trajectories combined
 }

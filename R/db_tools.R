@@ -1,14 +1,10 @@
-#' Fetches data from a PostgreSQL table and writes it to a local SQLite file
+#' Fetch data from a PostgreSQL table and write it to a local SQLite file
 #'
 #' @param credential_file A csv file containing the database credentials.
-#'
 #' @param tbl_name Name of the table to be downloaded.
-#'
 #' @param out_file_name Name of the output file.
-#'
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
-#'
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size.
 #'
@@ -25,19 +21,15 @@ postgres2sqlite <- function (credential_file, tbl_name, out_file_name,
     RSQLite::dbDisconnect (conn_sqlite)
 }
 
-#' Fetches data from a PostGIS table and writes it to a local Geopackage file
+#' Fetch data from a PostGIS table and write it to a local Geopackage file
 #'
 #' Rows without geometries will be omitted.
 #'
 #' @param credential_file A csv file containing the database credentials.
-#'
 #' @param tbl_name Name of the table to be downloaded.
-#'
 #' @param out_file_name Name of the output file.
-#'
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
-#'
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size.
 #'
@@ -64,17 +56,13 @@ postgres2gpkg <- function (credential_file, tbl_name, out_file_name, bbx = NULL,
     sf::st_write (pts_out, out_file_name)
 }
 
-#' Fetches data from a PostgreSQL table returns it as a data.frame
+#' Fetch data from a PostgreSQL table return it as a data.frame
 #'
 #' @param credential_file A csv file containing the database credentials.
-#'
 #' @param tbl_name Name of the table to be downloaded.
-#'
 #' @param out_file_name Name of the output file.
-#'
 #' @param bbx Optional bounding box. A numeric \code{vector} of length 4 with
 #' \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}.
-#'
 #' @param ask if \code{TRUE}, ask user for confirmation after showing the table
 #' size.
 #'
@@ -144,12 +132,9 @@ get_postgresql_tbl <- function (credential_file, tbl_name, out_file_name,
 #' Read SQLite file and return a data.frame
 #'
 #' @param f_name Name of the SQLite file.
-#'
 #' @param tbl_name Name of the table to be fetched.
-#'
 #' @param sf if \code{TRUE}, returns a \code{sf} object containing only data
 #' with valid coordinates in fields lat and lon.
-#'
 #' @param bbox a numeric \code{vector} of length 4 with \code{xmin},
 #' \code{ymin}, \code{xmax} and \code{ymax}.
 #'
@@ -224,8 +209,7 @@ read_sqlite <- function (f_name, tbl_name, sf = TRUE, bbox = NULL)
 
 #' Read GeoPackage file and return a spatial data.frame
 #'
-#' @param f_name Name of the GPKG file
-#'
+#' @param f_name Name of the GPKG file.
 #' @param bbox a numeric \code{vector} of length 4 with \code{xmin},
 #' \code{ymin}, \code{xmax} and \code{ymax}.
 #'
@@ -267,7 +251,6 @@ read_gpkg <- function (f_name, bbox = NULL)
 #' Write spatial data object to GeoPackage file
 #'
 #' @param dat \code{sf} object containing spatial data.
-#'
 #' @param out_file_name File name of the saved object.
 #'
 #' @export

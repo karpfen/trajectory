@@ -2,7 +2,7 @@
 % Please edit documentation in R/db_tools.R
 \name{postgres2gpkg}
 \alias{postgres2gpkg}
-\title{Fetches data from a PostGIS table and writes it to a local Geopackage file}
+\title{Fetch data from a PostGIS table and write it to a local Geopackage file}
 \usage{
 postgres2gpkg(credential_file, tbl_name, out_file_name, bbx = NULL,
   ask = TRUE)

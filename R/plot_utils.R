@@ -1,4 +1,4 @@
-#' Generates text for trajectory popup fields on the graph
+#' Generate text for trajectory popup fields on the graph
 #'
 #' @param ptitle The popup title.
 #' @param pnames \code{vector} containing attribute names.

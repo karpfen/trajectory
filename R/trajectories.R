@@ -1,12 +1,9 @@
-#' Creates a set of trajectories from a sfc of points
+#' Create a set of trajectories from a sfc of points
 #'
 #' @param pts \code{sf} object containing points.
-#'
 #' @param foi Feature of interest by which the different trajectories are
 #' differentiated.
-#'
 #' @param order_by Field by which points are ordered.
-#'
 #' @param n minimum number of points per trajectory.
 #'
 #' @return A \code{sf} object containing the trajectories.
@@ -43,7 +40,7 @@ make_trajectories <- function (pts, foi, order_by, n)
     traj [traj$trajectory_length > 0, ]
 }
 
-#' Calculates a number of movement indices for each trajectory
+#' Calculate a number of movement indices for each trajectory
 #'
 #' Calculates average distance travelled per point and great circle distance
 #' covered between start and end point for each trajectory in metres.
@@ -82,7 +79,7 @@ make_movement_indices <- function (traj)
            number_of_points)
 }
 
-#' Calculates the linear directional mean of all trajectories combined
+#' Calculate the linear directional mean of all trajectories combined
 #'
 #' @param traj \code{sf} object containing trajectories.
 #'

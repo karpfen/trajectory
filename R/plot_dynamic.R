@@ -1,4 +1,4 @@
-#' Plots trajectory and point data as a shiny leaflet map
+#' Plot trajectory and point data as a shiny leaflet map
 #'
 #' @param traj \code{sf} object containing trajectory data to display.
 #' @param pts \code{sf} object containing point data to display.
